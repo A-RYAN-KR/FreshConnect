@@ -1,22 +1,19 @@
-// src/server.js
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const app = require("./app");
+const app = require('./app'); // Import the Express app
+const connectDB = require('./config/db');
+const fileUpload = require('express-fileupload');
+const cors = require('cors');
+require('dotenv').config();
 
-// Load environment variables
-dotenv.config();
+const port = process.env.PORT || 5000;
 
-// Connect to the database
+// Connect to MongoDB
 connectDB();
 
-const PORT = process.env.PORT || 5000;
+// Middleware (applied before routes)
+app.use(cors()); // Enable CORS for all routes
+app.use(fileUpload({ useTempFiles: true })); // Enable file uploads
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-// Handle unhandled promise rejections
-process.on("unhandledRejection", (err, promise) => {
-  console.log(`Error: ${err.message}`);
-  server.close(() => process.exit(1));
+// Start the server
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });

@@ -1,6 +1,6 @@
  // src/api/auth/auth.controller.js
 const jwt = require('jsonwebtoken');
-const User = require('../users/user.model');
+const User = require('../models/userModel');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {

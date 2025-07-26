@@ -1,6 +1,5 @@
-// src/middleware/auth.middleware.js
 const jwt = require("jsonwebtoken");
-const User = require("../api/users/user.model");
+const User = require("../models/userModel");
 
 exports.protect = async (req, res, next) => {
   let token;
@@ -20,7 +19,9 @@ exports.protect = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id);
+    console.log("Decoded token:", decoded); // **IMPORTANT: Log the decoded token**
+
+    req.user = await User.findById(decoded.id); // Use decoded.id
 
     if (!req.user) {
       return res
@@ -30,6 +31,7 @@ exports.protect = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.error("JWT Verification Error:", error); // Log the error
     return res
       .status(401)
       .json({ success: false, message: "Not authorized, token failed" });

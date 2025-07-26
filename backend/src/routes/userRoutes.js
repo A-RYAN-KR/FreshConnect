@@ -1,8 +1,8 @@
  // src/api/auth/auth.routes.js
 const express = require('express');
-const { register, login, getMe } = require('./auth.controller');
-const { validateRegister, validateLogin } = require('./auth.validation');
-const { protect } = require('../../middleware/auth.middleware');
+const { register, login, getMe } = require('../controllers/userController');
+const { validateRegister, validateLogin } = require('../middleware/authValidation');
+const { protect } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 

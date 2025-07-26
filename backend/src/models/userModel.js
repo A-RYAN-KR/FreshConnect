@@ -1,4 +1,3 @@
- // src/api/users/user.model.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 

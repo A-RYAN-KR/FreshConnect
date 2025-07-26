@@ -11,12 +11,17 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@cloudinary/react": "^1.14.3",
+    "@cloudinary/url-gen": "^1.21.0",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "express-fileupload": "^1.5.2",
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.5"
+    "mongoose": "^8.16.5",
+    "streamifier": "^0.1.1"
   }
 }

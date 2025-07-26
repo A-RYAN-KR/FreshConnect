@@ -1,22 +1,31 @@
-// src/app.js
-const express = require("express");
-const cors = require("cors");
-const authRoutes = require("./api/auth/auth.routes");
+const express = require('express');
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes')
+const reviewRoutes = require('./routes/reviewRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const fileUpload = require('express-fileupload');
 
 const app = express();
 
-// Middleware
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(express.json()); // Body parser for JSON
+// Middleware (applied globally)
+app.use(express.json()); // Parse JSON request bodies
 
-// API Routes
-app.get("/", (req, res) => res.send("FreshConnect API is running..."));
-app.use("/api/auth", authRoutes);
+app.use(fileUpload({ useTempFiles: true }));
+// Mount routes
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/orders', orderRoutes);
 
-// Simple error handling (can be expanded)
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
+// Catch-all route for undefined routes (optional)
+app.use((req, res, next) => {
+  res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-module.exports = app;
+// Error handling middleware (optional)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: 'Internal server error' });
+});
+
+module.exports = app; // Export the Express app instance
