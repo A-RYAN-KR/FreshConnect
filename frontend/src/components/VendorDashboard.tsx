@@ -1,5 +1,3 @@
-// src/components/VendorDashboard.tsx
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +21,8 @@ import { getAllSuppliers } from "@/services/supplierService";
 import { Supplier, SupplierCard } from "./vendor/SupplierCard";
 import { OrderDialog } from "./vendor/OrderDialog";
 import { MyOrdersTab } from './vendor/MyOrdersTab';
+import { ComplaintDialog, ComplaintPayload } from './vendor/ComplaintDialog'; // Import the new dialog
+import { Order } from './vendor/OrderCard'; // Import Order type
 
 interface VendorDashboardProps {
   onBack: () => void;
@@ -40,9 +40,13 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // State for the order dialog now holds the entire supplier object
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
   const [supplierToOrderFrom, setSupplierToOrderFrom] = useState<Supplier | null>(null);
+
+  // --- NEW STATE FOR COMPLAINT DIALOG ---
+  const [isComplaintDialogOpen, setIsComplaintDialogOpen] = useState(false);
+  const [orderToComplainAbout, setOrderToComplainAbout] = useState<Order | null>(null);
+
 
   // --- Data Fetching ---
   useEffect(() => {
@@ -50,7 +54,6 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
       try {
         setIsLoading(true);
         const data = await getAllSuppliers();
-        // Assuming the API response is { success: true, suppliers: [...] }
         setSuppliers(data.suppliers || []);
       } catch (err) {
         setError("Failed to fetch suppliers. Please try again later.");
@@ -60,7 +63,7 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
       }
     };
     fetchSuppliers();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   // --- Event Handlers ---
   const handleOrderNowClick = (supplier: Supplier) => {
@@ -70,13 +73,24 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
   const handleOrderPlaced = (order: any) => {
     console.log("Order placed successfully!", order);
-    // Here you can add a success toast notification (e.g., using Sonner)
-    // and/or refetch the data for the "My Orders" tab.
+  };
+
+  // --- NEW HANDLERS FOR COMPLAINT FLOW ---
+  const handleFileComplaintClick = (order: Order) => {
+    setOrderToComplainAbout(order);
+    setIsComplaintDialogOpen(true);
+  };
+
+  const handleComplaintSubmit = (payload: ComplaintPayload) => {
+    console.log("Complaint Submitted!", payload);
+    // In a real app, you would make an API call here.
+    // e.g., await submitComplaintService(payload);
+    // You could also show a success toast notification.
   };
 
   return (
     <>
-      {/* The Order Dialog is now passed the full supplier object */}
+      {/* Existing Order Dialog */}
       <OrderDialog
         supplier={supplierToOrderFrom}
         isOpen={isOrderDialogOpen}
@@ -84,8 +98,15 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
         onOrderPlaced={handleOrderPlaced}
       />
 
+      {/* NEW Complaint Dialog */}
+      <ComplaintDialog
+        order={orderToComplainAbout}
+        isOpen={isComplaintDialogOpen}
+        onOpenChange={setIsComplaintDialogOpen}
+        onSubmit={handleComplaintSubmit}
+      />
+
       <div className="min-h-screen bg-background">
-        {/* Header */}
         <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -106,7 +127,6 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
         <div className="container mx-auto px-4 py-6">
           <div className="grid lg:grid-cols-4 gap-6">
-            {/* Sidebar (can be extracted to its own component) */}
             <div className="lg:col-span-1 space-y-6">
               <Card>
                 <CardHeader><CardTitle className="text-lg">Quick Stats</CardTitle></CardHeader>
@@ -118,13 +138,10 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
               </Card>
               <Card>
                 <CardHeader><CardTitle className="text-lg">Filters</CardTitle></CardHeader>
-                <CardContent>
-                  {/* Filter UI can be implemented here */}
-                </CardContent>
+                <CardContent>{/* Filter UI */}</CardContent>
               </Card>
             </div>
 
-            {/* Main Content */}
             <div className="lg:col-span-3">
               <div className="space-y-6">
                 <Card>
@@ -170,12 +187,11 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                     )}
                   </TabsContent>
 
-                  <TabsContent value="groups" className="space-y-4">
-                    {/* UI for Group Orders tab */}
-                  </TabsContent>
+                  <TabsContent value="groups" className="space-y-4">{/* Group Orders UI */}</TabsContent>
 
                   <TabsContent value="orders" className="space-y-4">
-                    <MyOrdersTab />
+                    {/* Pass the new handler down to the tab component */}
+                    <MyOrdersTab onFileComplaint={handleFileComplaintClick} />
                   </TabsContent>
                 </Tabs>
               </div>

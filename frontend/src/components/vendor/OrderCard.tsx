@@ -1,12 +1,8 @@
-// src/components/vendor/OrderCard.tsx
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Truck, MessageSquare, Star } from "lucide-react";
+import { Truck, MessageSquare, Star, ShieldAlert } from "lucide-react"; // Import ShieldAlert
 
-// Define the shape of an Order object, matching your backend models
-// We use 'any' for populated fields for flexibility, but you can create specific types.
 export interface Order {
     _id: string;
     supplierId: {
@@ -24,8 +20,10 @@ export interface Order {
     createdAt: string;
 }
 
+// MODIFIED: Add a new callback prop for the complaint button
 interface OrderCardProps {
     order: Order;
+    onFileComplaint: (order: Order) => void;
 }
 
 const formatDate = (dateString: string) => {
@@ -46,7 +44,7 @@ const StatusBadge = ({ status }: { status: Order['status'] }) => {
 };
 
 
-export const OrderCard = ({ order }: OrderCardProps) => {
+export const OrderCard = ({ order, onFileComplaint }: OrderCardProps) => {
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -75,7 +73,7 @@ export const OrderCard = ({ order }: OrderCardProps) => {
                         <p className="text-lg font-bold">₹{order.totalPrice.toFixed(2)}</p>
                     </div>
                 </div>
-                <div className="border-t mt-4 pt-4 flex justify-end space-x-2">
+                <div className="border-t mt-4 pt-4 flex justify-end items-center space-x-2">
                     <Button variant="outline" size="sm">
                         <Truck className="w-4 h-4 mr-2" />
                         Track Order
@@ -85,11 +83,20 @@ export const OrderCard = ({ order }: OrderCardProps) => {
                         Contact Supplier
                     </Button>
                     {order.status === 'Delivered' && (
-                        <Button variant="vendor" size="sm">
+                        <Button variant="default" size="sm">
                             <Star className="w-4 h-4 mr-2" />
                             Leave a Review
                         </Button>
                     )}
+                    {/* NEW BUTTON */}
+                    <Button 
+                        variant="destructive" 
+                        size="sm" 
+                        onClick={() => onFileComplaint(order)}
+                    >
+                        <ShieldAlert className="w-4 h-4 mr-2" />
+                        File Complaint
+                    </Button>
                 </div>
             </CardContent>
         </Card>
