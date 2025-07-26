@@ -1,17 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Shield, Users, TrendingUp, CheckCircle, PhoneCall } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Star, Shield, Users, TrendingUp, CheckCircle, PhoneCall, Globe } from "lucide-react";
 import heroImage from "@/assets/hero-marketplace.jpg";
 import vendorIcon from "@/assets/vendor-icon.jpg";
 import supplierIcon from "@/assets/supplier-icon.jpg";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-
-interface LandingPageProps {
-  onUserTypeSelect: (userType: 'vendor' | 'supplier') => void;
-}
+import { Link } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
 
 const LandingPage = () => {
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -21,11 +30,26 @@ const LandingPage = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
             <h1 className="text-xl font-bold text-foreground">FreshConnect</h1>
           </div>
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost">About</Button>
-            <Button variant="ghost">Contact</Button>
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Globe className="h-[1.2rem] w-[1.2rem]" />
+                  <span className="sr-only">Change Language</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => changeLanguage('en')}>English</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => changeLanguage('hi')}>हिंदी (Hindi)</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => changeLanguage('mr')}>मराठी (Marathi)</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* ✅ CORRECTED KEYS */}
+            <Button variant="ghost">{t('buttons.about')}</Button>
+            <Button variant="ghost">{t('buttons.contact')}</Button>
             <Link to="/auth/login">
-              <Button variant="outline">Login</Button>
+              <Button variant="outline">{t('buttons.login')}</Button>
             </Link>
           </div>
         </div>
@@ -39,32 +63,30 @@ const LandingPage = () => {
             <div className="space-y-8">
               <div className="space-y-4">
                 <Badge className="w-fit bg-primary/10 text-primary border-primary/20">
-                  🚀 Connecting Street Food Vendors
+                  {t('hero.badge')}
                 </Badge>
                 <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                  Fresh Ingredients,
+                  {t('hero.title.part1')}
                   <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    {" "}Fair Prices
+                    {t('hero.title.part2')}
                   </span>
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
-                  Connect with verified suppliers, compare prices, join group orders for bulk discounts,
-                  and track deliveries—all in one trusted platform.
+                  {t('hero.subtitle')}
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                {/* ✅ FIX: Change onClick to use Link with state */}
                 <Link to="/auth/login" state={{ userType: 'vendor' }} className="flex-1">
                   <Button variant="hero" size="hero" className="w-full">
                     <Users className="w-5 h-5" />
-                    I'm a Vendor
+                    {t('buttons.vendor')}
                   </Button>
                 </Link>
                 <Link to="/auth/login" state={{ userType: 'supplier' }} className="flex-1">
                   <Button variant="supplier" size="hero" className="w-full">
                     <TrendingUp className="w-5 h-5" />
-                    I'm a Supplier
+                    {t('buttons.supplier')}
                   </Button>
                 </Link>
               </div>
@@ -72,15 +94,15 @@ const LandingPage = () => {
               <div className="grid grid-cols-3 gap-6 pt-8">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">1000+</div>
-                  <div className="text-sm text-muted-foreground">Active Vendors</div>
+                  <div className="text-sm text-muted-foreground">{t('metrics.vendors')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-secondary">500+</div>
-                  <div className="text-sm text-muted-foreground">Verified Suppliers</div>
+                  <div className="text-sm text-muted-foreground">{t('metrics.suppliers')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-trust">95%</div>
-                  <div className="text-sm text-muted-foreground">Trust Score</div>
+                  <div className="text-sm text-muted-foreground">{t('metrics.trust')}</div>
                 </div>
               </div>
             </div>
@@ -89,7 +111,7 @@ const LandingPage = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl blur-3xl"></div>
               <img
                 src={heroImage}
-                alt="Street food marketplace"
+                alt={t('hero.badge')}
                 className="relative rounded-2xl shadow-2xl w-full h-auto"
               />
             </div>
@@ -101,25 +123,24 @@ const LandingPage = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">Choose Your Role</h2>
-            <p className="text-xl text-muted-foreground">Join thousands of vendors and suppliers already connected</p>
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">{t('choose_role.title')}</h2>
+            <p className="text-xl text-muted-foreground">{t('choose_role.subtitle')}</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* These cards also navigate to the register page with userType state */}
             <Link to="/auth/login" state={{ userType: 'vendor' }}>
               <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
                 <CardHeader className="text-center pb-6">
-                  <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-primary/20"><img src={vendorIcon} alt="Street Food Vendor" className="w-full h-full object-cover" /></div>
-                  <CardTitle className="text-2xl text-primary">Street Food Vendor</CardTitle>
-                  <CardDescription className="text-base">Find trusted suppliers and get the best prices</CardDescription>
+                  <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-primary/20"><img src={vendorIcon} alt={t('vendor_card.title')} className="w-full h-full object-cover" /></div>
+                  <CardTitle className="text-2xl text-primary">{t('vendor_card.title')}</CardTitle>
+                  <CardDescription className="text-base">{t('vendor_card.desc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-primary flex-shrink-0" /><span>Compare prices across suppliers</span></div>
-                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-primary flex-shrink-0" /><span>Join group orders for bulk discounts</span></div>
+                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-primary flex-shrink-0" /><span>{t('vendor_card.features.0')}</span></div>
+                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-primary flex-shrink-0" /><span>{t('vendor_card.features.1')}</span></div>
                   </div>
-                  <Button variant="vendor" className="w-full mt-6 group-hover:scale-105 transition-transform">Start as Vendor</Button>
+                  <Button variant="vendor" className="w-full mt-6 group-hover:scale-105 transition-transform">{t('vendor_card.cta')}</Button>
                 </CardContent>
               </Card>
             </Link>
@@ -127,16 +148,16 @@ const LandingPage = () => {
             <Link to="/auth/login" state={{ userType: 'supplier' }}>
               <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-secondary/50">
                 <CardHeader className="text-center pb-6">
-                  <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-secondary/20"><img src={supplierIcon} alt="Raw Material Supplier" className="w-full h-full object-cover" /></div>
-                  <CardTitle className="text-2xl text-secondary">Raw Material Supplier</CardTitle>
-                  <CardDescription className="text-base">Reach more vendors and grow your business</CardDescription>
+                  <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-secondary/20"><img src={supplierIcon} alt={t('supplier_card.title')} className="w-full h-full object-cover" /></div>
+                  <CardTitle className="text-2xl text-secondary">{t('supplier_card.title')}</CardTitle>
+                  <CardDescription className="text-base">{t('supplier_card.desc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" /><span>List products with real-time pricing</span></div>
-                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" /><span>Bid on group orders</span></div>
+                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" /><span>{t('supplier_card.features.0')}</span></div>
+                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" /><span>{t('supplier_card.features.1')}</span></div>
                   </div>
-                  <Button variant="supplier" className="w-full mt-6 group-hover:scale-105 transition-transform">Start as Supplier</Button>
+                  <Button variant="supplier" className="w-full mt-6 group-hover:scale-105 transition-transform">{t('supplier_card.cta')}</Button>
                 </CardContent>
               </Card>
             </Link>
@@ -149,10 +170,10 @@ const LandingPage = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Built on Trust & Transparency
+              {t('trust_section.title')}
             </h2>
             <p className="text-xl text-muted-foreground">
-              Every supplier verified, every transaction secure
+              {t('trust_section.subtitle')}
             </p>
           </div>
 
@@ -160,36 +181,30 @@ const LandingPage = () => {
             <Card className="text-center">
               <CardHeader>
                 <Shield className="w-12 h-12 text-trust mx-auto mb-4" />
-                <CardTitle className="text-trust">Verified Suppliers</CardTitle>
+                <CardTitle className="text-trust">{t('trust_section.cards.verified.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
-                  All suppliers verified through GSTIN and business licenses with ongoing trust monitoring
-                </p>
+                <p className="text-muted-foreground">{t('trust_section.cards.verified.desc')}</p>
               </CardContent>
             </Card>
 
             <Card className="text-center">
               <CardHeader>
                 <Star className="w-12 h-12 text-primary mx-auto mb-4" />
-                <CardTitle className="text-primary">Trust Ratings</CardTitle>
+                <CardTitle className="text-primary">{t('trust_section.cards.ratings.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
-                  AI-powered sentiment analysis ensures authentic reviews and maintains supplier quality
-                </p>
+                <p className="text-muted-foreground">{t('trust_section.cards.ratings.desc')}</p>
               </CardContent>
             </Card>
 
             <Card className="text-center">
               <CardHeader>
                 <PhoneCall className="w-12 h-12 text-secondary mx-auto mb-4" />
-                <CardTitle className="text-secondary">24/7 Support</CardTitle>
+                <CardTitle className="text-secondary">{t('trust_section.cards.support.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
-                  Dedicated support team to help resolve any issues and ensure smooth operations
-                </p>
+                <p className="text-muted-foreground">{t('trust_section.cards.support.desc')}</p>
               </CardContent>
             </Card>
           </div>
@@ -206,39 +221,39 @@ const LandingPage = () => {
                 <h3 className="text-lg font-bold">FreshConnect</h3>
               </div>
               <p className="text-muted-foreground">
-                Connecting street food vendors with trusted suppliers across India.
+                {t('footer.about')}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">For Vendors</h4>
+              <h4 className="font-semibold mb-4">{t('footer.vendors.title')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Find Suppliers</li>
-                <li>Price Comparison</li>
-                <li>Group Orders</li>
-                <li>Track Deliveries</li>
+                <li>{t('footer.vendors.items.0')}</li>
+                <li>{t('footer.vendors.items.1')}</li>
+                <li>{t('footer.vendors.items.2')}</li>
+                <li>{t('footer.vendors.items.3')}</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">For Suppliers</h4>
+              <h4 className="font-semibold mb-4">{t('footer.suppliers.title')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>List Products</li>
-                <li>Manage Orders</li>
-                <li>Analytics Dashboard</li>
-                <li>Verification Process</li>
+                <li>{t('footer.suppliers.items.0')}</li>
+                <li>{t('footer.suppliers.items.1')}</li>
+                <li>{t('footer.suppliers.items.2')}</li>
+                <li>{t('footer.suppliers.items.3')}</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Support</h4>
+              <h4 className="font-semibold mb-4">{t('footer.support.title')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Help Center</li>
-                <li>Contact Us</li>
-                <li>Trust & Safety</li>
-                <li>Terms & Conditions</li>
+                <li>{t('footer.support.items.0')}</li>
+                <li>{t('footer.support.items.1')}</li>
+                <li>{t('footer.support.items.2')}</li>
+                <li>{t('footer.support.items.3')}</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 FreshConnect. All rights reserved.</p>
+            <p>{t('footer.copyright')}</p>
           </div>
         </div>
       </footer>
