@@ -1,17 +1,39 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Shield, Users, TrendingUp, CheckCircle, PhoneCall } from "lucide-react";
+import {
+  Star,
+  Shield,
+  Users,
+  TrendingUp,
+  CheckCircle,
+  PhoneCall,
+} from "lucide-react";
 import heroImage from "@/assets/hero-marketplace.jpg";
 import vendorIcon from "@/assets/vendor-icon.jpg";
 import supplierIcon from "@/assets/supplier-icon.jpg";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface LandingPageProps {
-  onUserTypeSelect: (userType: 'vendor' | 'supplier') => void;
+  onUserTypeSelect: (userType: "vendor" | "supplier") => void;
 }
 
 const LandingPage = ({ onUserTypeSelect }: LandingPageProps) => {
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const newLang =
+      i18n.language === "en" ? "hi" : i18n.language === "hi" ? "mr" : "en";
+    i18n.changeLanguage(newLang);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -22,11 +44,20 @@ const LandingPage = ({ onUserTypeSelect }: LandingPageProps) => {
             <h1 className="text-xl font-bold text-foreground">FreshConnect</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">About</Button>
-            <Button variant="ghost">Contact</Button>
+            <Button variant="ghost">{t("buttons.about")}</Button>
+            <Button variant="ghost">{t("buttons.contact")}</Button>
             <Link to="/auth/login">
-              <Button variant="outline">Login</Button>
+              <Button variant="outline">{t("buttons.login")}</Button>
             </Link>
+            <select
+              value={i18n.language}
+              onChange={toggleLanguage}
+              className="text-sm bg-transparent border border-border rounded px-2 py-1"
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="mr">मराठी</option>
+            </select>
           </div>
         </div>
       </header>
@@ -39,17 +70,16 @@ const LandingPage = ({ onUserTypeSelect }: LandingPageProps) => {
             <div className="space-y-8">
               <div className="space-y-4">
                 <Badge className="w-fit bg-primary/10 text-primary border-primary/20">
-                  🚀 Connecting Street Food Vendors
+                  🚀 {t("hero.badge")}
                 </Badge>
                 <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                  Fresh Ingredients,
+                  {t("hero.title.part1")}
                   <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    {" "}Fair Prices
+                    {t("hero.title.part2")}
                   </span>
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
-                  Connect with verified suppliers, compare prices, join group orders for bulk discounts,
-                  and track deliveries—all in one trusted platform.
+                  {t("hero.subtitle")}
                 </p>
               </div>
 
@@ -57,35 +87,41 @@ const LandingPage = ({ onUserTypeSelect }: LandingPageProps) => {
                 <Button
                   variant="hero"
                   size="hero"
-                  onClick={() => onUserTypeSelect('vendor')}
+                  onClick={() => onUserTypeSelect("vendor")}
                   className="flex-1"
                 >
                   <Users className="w-5 h-5" />
-                  I'm a Vendor
+                  {t("buttons.vendor")}
                 </Button>
                 <Button
                   variant="supplier"
                   size="hero"
-                  onClick={() => onUserTypeSelect('supplier')}
+                  onClick={() => onUserTypeSelect("supplier")}
                   className="flex-1"
                 >
                   <TrendingUp className="w-5 h-5" />
-                  I'm a Supplier
+                  {t("buttons.supplier")}
                 </Button>
               </div>
 
               <div className="grid grid-cols-3 gap-6 pt-8">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">1000+</div>
-                  <div className="text-sm text-muted-foreground">Active Vendors</div>
+                  <div className="text-sm text-muted-foreground">
+                    {t("metrics.vendors")}
+                  </div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-secondary">500+</div>
-                  <div className="text-sm text-muted-foreground">Verified Suppliers</div>
+                  <div className="text-sm text-muted-foreground">
+                    {t("metrics.suppliers")}
+                  </div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-trust">95%</div>
-                  <div className="text-sm text-muted-foreground">Trust Score</div>
+                  <div className="text-sm text-muted-foreground">
+                    {t("metrics.trust")}
+                  </div>
                 </div>
               </div>
             </div>
@@ -107,82 +143,94 @@ const LandingPage = ({ onUserTypeSelect }: LandingPageProps) => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Choose Your Role
+              {t("choose_role.title")}
             </h2>
             <p className="text-xl text-muted-foreground">
-              Join thousands of vendors and suppliers already connected
+              {t("choose_role.subtitle")}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Vendor Card */}
-            <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-primary/50" onClick={() => onUserTypeSelect('vendor')}>
+            <Card
+              className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-primary/50"
+              onClick={() => onUserTypeSelect("vendor")}
+            >
               <CardHeader className="text-center pb-6">
                 <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-primary/20">
-                  <img src={vendorIcon} alt="Street Food Vendor" className="w-full h-full object-cover" />
+                  <img
+                    src={vendorIcon}
+                    alt="Street Food Vendor"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <CardTitle className="text-2xl text-primary">Street Food Vendor</CardTitle>
+                <CardTitle className="text-2xl text-primary">
+                  {t("vendor_card.title")}
+                </CardTitle>
                 <CardDescription className="text-base">
-                  Find trusted suppliers and get the best prices for your ingredients
+                  {t("vendor_card.desc")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                    <span className="text-sm">Compare prices across suppliers</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                    <span className="text-sm">Join group orders for bulk discounts</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                    <span className="text-sm">Track orders in real-time</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                    <span className="text-sm">Access verified supplier ratings</span>
-                  </div>
+                  {(
+                    t("vendor_card.features", {
+                      returnObjects: true,
+                    }) as string[]
+                  ).map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
+                    </div>
+                  ))}
                 </div>
-                <Button variant="vendor" className="w-full mt-6 group-hover:scale-105 transition-transform">
-                  Start as Vendor
+                <Button
+                  variant="vendor"
+                  className="w-full mt-6 group-hover:scale-105 transition-transform"
+                >
+                  {t("vendor_card.cta")}
                 </Button>
               </CardContent>
             </Card>
 
             {/* Supplier Card */}
-            <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-secondary/50" onClick={() => onUserTypeSelect('supplier')}>
+            <Card
+              className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-secondary/50"
+              onClick={() => onUserTypeSelect("supplier")}
+            >
               <CardHeader className="text-center pb-6">
                 <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-secondary/20">
-                  <img src={supplierIcon} alt="Raw Material Supplier" className="w-full h-full object-cover" />
+                  <img
+                    src={supplierIcon}
+                    alt="Raw Material Supplier"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <CardTitle className="text-2xl text-secondary">Raw Material Supplier</CardTitle>
+                <CardTitle className="text-2xl text-secondary">
+                  {t("supplier_card.title")}
+                </CardTitle>
                 <CardDescription className="text-base">
-                  Reach more vendors and grow your business with verified listings
+                  {t("supplier_card.desc")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" />
-                    <span className="text-sm">List products with real-time pricing</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" />
-                    <span className="text-sm">Bid on group orders</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" />
-                    <span className="text-sm">Manage delivery schedules</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" />
-                    <span className="text-sm">Build trust with verified reviews</span>
-                  </div>
+                  {(
+                    t("supplier_card.features", {
+                      returnObjects: true,
+                    }) as string[]
+                  ).map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
+                    </div>
+                  ))}
                 </div>
-                <Button variant="supplier" className="w-full mt-6 group-hover:scale-105 transition-transform">
-                  Start as Supplier
+                <Button
+                  variant="supplier"
+                  className="w-full mt-6 group-hover:scale-105 transition-transform"
+                >
+                  {t("supplier_card.cta")}
                 </Button>
               </CardContent>
             </Card>
@@ -195,49 +243,45 @@ const LandingPage = ({ onUserTypeSelect }: LandingPageProps) => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Built on Trust & Transparency
+              {t("trust_section.title")}
             </h2>
             <p className="text-xl text-muted-foreground">
-              Every supplier verified, every transaction secure
+              {t("trust_section.subtitle")}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center">
-              <CardHeader>
-                <Shield className="w-12 h-12 text-trust mx-auto mb-4" />
-                <CardTitle className="text-trust">Verified Suppliers</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  All suppliers verified through GSTIN and business licenses with ongoing trust monitoring
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <Star className="w-12 h-12 text-primary mx-auto mb-4" />
-                <CardTitle className="text-primary">Trust Ratings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  AI-powered sentiment analysis ensures authentic reviews and maintains supplier quality
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <PhoneCall className="w-12 h-12 text-secondary mx-auto mb-4" />
-                <CardTitle className="text-secondary">24/7 Support</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Dedicated support team to help resolve any issues and ensure smooth operations
-                </p>
-              </CardContent>
-            </Card>
+            {["verified", "ratings", "support"].map((key) => (
+              <Card key={key} className="text-center">
+                <CardHeader>
+                  {key === "verified" && (
+                    <Shield className="w-12 h-12 text-trust mx-auto mb-4" />
+                  )}
+                  {key === "ratings" && (
+                    <Star className="w-12 h-12 text-primary mx-auto mb-4" />
+                  )}
+                  {key === "support" && (
+                    <PhoneCall className="w-12 h-12 text-secondary mx-auto mb-4" />
+                  )}
+                  <CardTitle
+                    className={
+                      key === "verified"
+                        ? "text-trust"
+                        : key === "ratings"
+                        ? "text-primary"
+                        : "text-secondary"
+                    }
+                  >
+                    {t(`trust_section.cards.${key}.title`)}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    {t(`trust_section.cards.${key}.desc`)}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -251,40 +295,27 @@ const LandingPage = ({ onUserTypeSelect }: LandingPageProps) => {
                 <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
                 <h3 className="text-lg font-bold">FreshConnect</h3>
               </div>
-              <p className="text-muted-foreground">
-                Connecting street food vendors with trusted suppliers across India.
-              </p>
+              <p className="text-muted-foreground">{t("footer.about")}</p>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">For Vendors</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Find Suppliers</li>
-                <li>Price Comparison</li>
-                <li>Group Orders</li>
-                <li>Track Deliveries</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">For Suppliers</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>List Products</li>
-                <li>Manage Orders</li>
-                <li>Analytics Dashboard</li>
-                <li>Verification Process</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Help Center</li>
-                <li>Contact Us</li>
-                <li>Trust & Safety</li>
-                <li>Terms & Conditions</li>
-              </ul>
-            </div>
+            {["vendors", "suppliers", "support"].map((key) => (
+              <div key={key}>
+                <h4 className="font-semibold mb-4">
+                  {t(`footer.${key}.title`)}
+                </h4>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  {(
+                    t(`footer.${key}.items`, {
+                      returnObjects: true,
+                    }) as string[]
+                  ).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 FreshConnect. All rights reserved.</p>
+            <p>{t("footer.copyright")}</p>
           </div>
         </div>
       </footer>

@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { 
+import {
   ArrowLeft,
   Plus,
   Package,
@@ -16,7 +22,7 @@ import {
   Clock,
   Edit,
   Eye,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 
 interface SupplierDashboardProps {
@@ -34,7 +40,7 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
       status: "In Stock",
       orders: 23,
       rating: 4.8,
-      lastUpdated: "2 hours ago"
+      lastUpdated: "2 hours ago",
     },
     {
       id: 2,
@@ -45,7 +51,7 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
       status: "Low Stock",
       orders: 15,
       rating: 4.9,
-      lastUpdated: "1 day ago"
+      lastUpdated: "1 day ago",
     },
     {
       id: 3,
@@ -56,8 +62,8 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
       status: "Out of Stock",
       orders: 8,
       rating: 4.6,
-      lastUpdated: "3 days ago"
-    }
+      lastUpdated: "3 days ago",
+    },
   ];
 
   const activeOrders = [
@@ -68,7 +74,7 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
       amount: "₹2,400",
       status: "Preparing",
       deliveryTime: "2-4 PM Today",
-      trustScore: 87
+      trustScore: 87,
     },
     {
       id: 2,
@@ -77,8 +83,8 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
       amount: "₹8,000",
       status: "Ready for Pickup",
       deliveryTime: "10 AM - 12 PM",
-      trustScore: 92
-    }
+      trustScore: 92,
+    },
   ];
 
   const groupOrderBids = [
@@ -90,7 +96,7 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
       myBid: "₹63/kg",
       status: "Leading",
       timeLeft: "2 hours",
-      vendors: 12
+      vendors: 12,
     },
     {
       id: 2,
@@ -100,8 +106,8 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
       myBid: "₹30/kg",
       status: "Behind",
       timeLeft: "45 minutes",
-      vendors: 8
-    }
+      vendors: 8,
+    },
   ];
 
   return (
@@ -116,11 +122,16 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
               </Button>
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
-                <h1 className="text-xl font-bold text-foreground">Supplier Dashboard</h1>
+                <h1 className="text-xl font-bold text-foreground">
+                  Supplier Dashboard
+                </h1>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant="outline" className="bg-secondary/10 text-secondary border-secondary/20">
+              <Badge
+                variant="outline"
+                className="bg-secondary/10 text-secondary border-secondary/20"
+              >
                 Trust Score: 94%
               </Badge>
               <Button variant="supplier">
@@ -165,7 +176,9 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Products Listed</p>
+                  <p className="text-sm text-muted-foreground">
+                    Products Listed
+                  </p>
                   <p className="text-2xl font-bold">12</p>
                   <p className="text-xs text-destructive">3 out of stock</p>
                 </div>
@@ -214,16 +227,21 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
 
             <div className="grid gap-4">
               {myProducts.map((product) => (
-                <Card key={product.id} className="hover:shadow-[var(--shadow-soft)] transition-all duration-300">
+                <Card
+                  key={product.id}
+                  className="hover:shadow-[var(--shadow-soft)] transition-all duration-300"
+                >
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="text-lg font-semibold">{product.name}</h3>
+                          <h3 className="text-lg font-semibold">
+                            {product.name}
+                          </h3>
                           <Badge variant="outline">{product.category}</Badge>
-                          <Badge 
+                          <Badge
                             className={
-                              product.status === "In Stock" 
+                              product.status === "In Stock"
                                 ? "bg-secondary/10 text-secondary border-secondary/20"
                                 : product.status === "Low Stock"
                                 ? "bg-primary/10 text-primary border-primary/20"
@@ -236,27 +254,43 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
 
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                           <div>
-                            <span className="text-muted-foreground">Price:</span>
-                            <div className="font-semibold text-primary">{product.price}</div>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">Stock:</span>
-                            <div className="font-medium">{product.stock}</div>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">Orders:</span>
-                            <div className="font-medium">{product.orders}</div>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">Rating:</span>
-                            <div className="flex items-center space-x-1">
-                              <Star className="w-3 h-3 fill-primary text-primary" />
-                              <span className="font-medium">{product.rating}</span>
+                            <span className="text-muted-foreground">
+                              Price:
+                            </span>
+                            <div className="font-semibold text-primary">
+                              {product.price}
                             </div>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">Updated:</span>
-                            <div className="font-medium">{product.lastUpdated}</div>
+                            <span className="text-muted-foreground">
+                              Stock:
+                            </span>
+                            <div className="font-medium">{product.stock}</div>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">
+                              Orders:
+                            </span>
+                            <div className="font-medium">{product.orders}</div>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">
+                              Rating:
+                            </span>
+                            <div className="flex items-center space-x-1">
+                              <Star className="w-3 h-3 fill-primary text-primary" />
+                              <span className="font-medium">
+                                {product.rating}
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">
+                              Updated:
+                            </span>
+                            <div className="font-medium">
+                              {product.lastUpdated}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -289,16 +323,21 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
 
             <div className="grid gap-4">
               {activeOrders.map((order) => (
-                <Card key={order.id} className="hover:shadow-[var(--shadow-soft)] transition-all duration-300">
+                <Card
+                  key={order.id}
+                  className="hover:shadow-[var(--shadow-soft)] transition-all duration-300"
+                >
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="text-lg font-semibold">{order.vendor}</h3>
+                          <h3 className="text-lg font-semibold">
+                            {order.vendor}
+                          </h3>
                           <Badge className="bg-trust/10 text-trust border-trust/20">
                             Trust: {order.trustScore}%
                           </Badge>
-                          <Badge 
+                          <Badge
                             className={
                               order.status === "Preparing"
                                 ? "bg-primary/10 text-primary border-primary/20"
@@ -309,19 +348,31 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
                           </Badge>
                         </div>
 
-                        <p className="text-muted-foreground mb-3">{order.items}</p>
+                        <p className="text-muted-foreground mb-3">
+                          {order.items}
+                        </p>
 
                         <div className="grid grid-cols-3 gap-4 text-sm">
                           <div>
-                            <span className="text-muted-foreground">Amount:</span>
-                            <div className="font-semibold text-primary">{order.amount}</div>
+                            <span className="text-muted-foreground">
+                              Amount:
+                            </span>
+                            <div className="font-semibold text-primary">
+                              {order.amount}
+                            </div>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">Delivery:</span>
-                            <div className="font-medium">{order.deliveryTime}</div>
+                            <span className="text-muted-foreground">
+                              Delivery:
+                            </span>
+                            <div className="font-medium">
+                              {order.deliveryTime}
+                            </div>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">Status:</span>
+                            <span className="text-muted-foreground">
+                              Status:
+                            </span>
                             <div className="font-medium">{order.status}</div>
                           </div>
                         </div>
@@ -353,15 +404,23 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
 
             <div className="grid gap-4">
               {groupOrderBids.map((bid) => (
-                <Card key={bid.id} className="hover:shadow-[var(--shadow-soft)] transition-all duration-300">
+                <Card
+                  key={bid.id}
+                  className="hover:shadow-[var(--shadow-soft)] transition-all duration-300"
+                >
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-lg font-semibold mb-1">{bid.product}</h3>
-                        <p className="text-muted-foreground">Quantity: {bid.quantity} • {bid.vendors} vendors participating</p>
+                        <h3 className="text-lg font-semibold mb-1">
+                          {bid.product}
+                        </h3>
+                        <p className="text-muted-foreground">
+                          Quantity: {bid.quantity} • {bid.vendors} vendors
+                          participating
+                        </p>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Badge 
+                        <Badge
                           className={
                             bid.status === "Leading"
                               ? "bg-secondary/10 text-secondary border-secondary/20"
@@ -380,7 +439,9 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
                     <div className="grid grid-cols-3 gap-4 text-sm mb-4">
                       <div>
                         <span className="text-muted-foreground">Best Bid:</span>
-                        <div className="font-semibold text-primary">{bid.currentBestBid}</div>
+                        <div className="font-semibold text-primary">
+                          {bid.currentBestBid}
+                        </div>
                       </div>
                       <div>
                         <span className="text-muted-foreground">My Bid:</span>
@@ -388,17 +449,24 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
                       </div>
                       <div>
                         <span className="text-muted-foreground">Status:</span>
-                        <div className={`font-medium ${bid.status === "Leading" ? "text-secondary" : "text-destructive"}`}>
+                        <div
+                          className={`font-medium ${
+                            bid.status === "Leading"
+                              ? "text-secondary"
+                              : "text-destructive"
+                          }`}
+                        >
                           {bid.status}
                         </div>
                       </div>
                     </div>
 
                     <div className="flex space-x-2">
-                      <Input placeholder="Enter new bid amount" className="flex-1" />
-                      <Button variant="supplier">
-                        Update Bid
-                      </Button>
+                      <Input
+                        placeholder="Enter new bid amount"
+                        className="flex-1"
+                      />
+                      <Button variant="supplier">Update Bid</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -408,13 +476,16 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
 
           <TabsContent value="analytics" className="space-y-6">
             <h2 className="text-2xl font-semibold">Analytics Dashboard</h2>
-            
+
             <Card>
               <CardContent className="p-6 text-center">
                 <BarChart3 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-medium mb-2">Analytics Coming Soon</h3>
+                <h3 className="text-xl font-medium mb-2">
+                  Analytics Coming Soon
+                </h3>
                 <p className="text-muted-foreground mb-6">
-                  Track your performance, revenue trends, and customer insights with our comprehensive analytics dashboard.
+                  Track your performance, revenue trends, and customer insights
+                  with our comprehensive analytics dashboard.
                 </p>
                 <Button variant="supplier">Get Notified When Ready</Button>
               </CardContent>

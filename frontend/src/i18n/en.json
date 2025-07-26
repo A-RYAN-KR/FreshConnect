@@ -1,0 +1,97 @@
+{
+  "hero": {
+    "badge": "Connecting Street Food Vendors",
+    "title": {
+      "part1": "Fresh Ingredients, ",
+      "part2": "Fair Prices"
+    },
+    "subtitle": "Connect with verified suppliers, compare prices, join group orders for bulk discounts, and track deliveries—all in one trusted platform."
+  },
+  "buttons": {
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "vendor": "I'm a Vendor",
+    "supplier": "I'm a Supplier"
+  },
+  "metrics": {
+    "vendors": "Active Vendors",
+    "suppliers": "Verified Suppliers",
+    "trust": "Trust Score"
+  },
+  "choose_role": {
+    "title": "Choose Your Role",
+    "subtitle": "Join thousands of vendors and suppliers already connected"
+  },
+  "vendor_card": {
+    "title": "Street Food Vendor",
+    "desc": "Find trusted suppliers and get the best prices for your ingredients",
+    "features": [
+      "Compare prices across suppliers",
+      "Join group orders for bulk discounts",
+      "Track orders in real-time",
+      "Access verified supplier ratings"
+    ],
+    "cta": "Start as Vendor"
+  },
+  "supplier_card": {
+    "title": "Raw Material Supplier",
+    "desc": "Reach more vendors and grow your business with verified listings",
+    "features": [
+      "List products with real-time pricing",
+      "Bid on group orders",
+      "Manage delivery schedules",
+      "Build trust with verified reviews"
+    ],
+    "cta": "Start as Supplier"
+  },
+  "trust_section": {
+    "title": "Built on Trust & Transparency",
+    "subtitle": "Every supplier verified, every transaction secure",
+    "cards": {
+      "verified": {
+        "title": "Verified Suppliers",
+        "desc": "All suppliers verified through GSTIN and business licenses with ongoing trust monitoring"
+      },
+      "ratings": {
+        "title": "Trust Ratings",
+        "desc": "AI-powered sentiment analysis ensures authentic reviews and maintains supplier quality"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "desc": "Dedicated support team to help resolve any issues and ensure smooth operations"
+      }
+    }
+  },
+  "footer": {
+    "about": "Connecting street food vendors with trusted suppliers across India.",
+    "vendors": {
+      "title": "For Vendors",
+      "items": [
+        "Find Suppliers",
+        "Price Comparison",
+        "Group Orders",
+        "Track Deliveries"
+      ]
+    },
+    "suppliers": {
+      "title": "For Suppliers",
+      "items": [
+        "List Products",
+        "Manage Orders",
+        "Analytics Dashboard",
+        "Verification Process"
+      ]
+    },
+    "support": {
+      "title": "Support",
+      "items": [
+        "Help Center",
+        "Contact Us",
+        "Trust & Safety",
+        "Terms & Conditions"
+      ]
+    },
+    "copyright": "© 2024 FreshConnect. All rights reserved."
+  }
+}
