@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/auth`;
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/users`;
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
 
 export const register = async (userData: any) => {
   const response = await axios.post(`${API_URL}/register`, userData);
@@ -11,7 +16,7 @@ export const register = async (userData: any) => {
   return response.data;
 };
 
-export const login = async (credentials: any) => {
+export const login = async (credentials: LoginCredentials) => {
   const response = await axios.post(`${API_URL}/login`, credentials);
   if (response.data) {
     localStorage.setItem('token', response.data.token);
@@ -20,7 +25,7 @@ export const login = async (credentials: any) => {
   return response.data;
 };
 
-export const getCurrentUser = async (token: string) => {
+export const getMe = async (token: string) => {
   const response = await axios.get(`${API_URL}/me`, {
     headers: {
       Authorization: `Bearer ${token}`,

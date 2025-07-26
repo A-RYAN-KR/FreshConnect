@@ -81,7 +81,7 @@ export function RegisterForm() {
     try {
       await register({ ...formData, userType });
       // On successful registration, navigate to the main part of the app
-      navigate('/');
+      navigate('/auth/login');
     } catch (error: any) {
       setErrorMessage(error.response?.data?.message || "Registration failed. Please check your details and try again.");
     } finally {

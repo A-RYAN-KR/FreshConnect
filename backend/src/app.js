@@ -4,13 +4,16 @@ const productRoutes = require('./routes/productRoutes')
 const reviewRoutes = require('./routes/reviewRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const fileUpload = require('express-fileupload');
+const cors = require("cors");
 
 const app = express();
 
 // Middleware (applied globally)
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON request bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-app.use(fileUpload({ useTempFiles: true }));
+// app.use(fileUpload({ useTempFiles: true }));
 // Mount routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
