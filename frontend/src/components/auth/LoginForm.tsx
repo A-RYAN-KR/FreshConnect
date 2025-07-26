@@ -28,7 +28,7 @@ export function LoginForm() {
       const data = await login(formData);
       // Assuming the token is stored in your auth service or here
       // localStorage.setItem('token', data.token); 
-      navigate('/marketplace');
+      navigate('/');
     } catch (error: any) {
       setErrorMessage(error.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
