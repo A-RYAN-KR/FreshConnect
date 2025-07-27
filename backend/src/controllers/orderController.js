@@ -68,6 +68,7 @@ exports.getMyOrders = async (req, res) => {
 // @route   GET /api/orders/supplier
 exports.getSupplierOrders = async (req, res) => {
   try {
+    console.log("Searching for orders for supplier ID:", req.user.id);
     const supplierId = req.user.id;
     const orders = await Order.find({ supplierId })
       .populate("vendorId", "firstName lastName email") // Get the vendor's details

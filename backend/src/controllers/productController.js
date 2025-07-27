@@ -1,4 +1,4 @@
-const { calculateTrustScore } = require("../utils/trustScore");
+const calculateTrustScore = require("../utils/trustScore");
 const Product = require("../models/productModel");
 const User = require("../models/userModel");
 

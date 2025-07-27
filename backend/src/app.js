@@ -4,6 +4,7 @@ const productRoutes = require('./routes/productRoutes')
 const reviewRoutes = require('./routes/reviewRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const fileUpload = require('express-fileupload');
+const supplierRoutes = require('./routes/supplierRoutes');
 const cors = require("cors");
 
 const app = express();
@@ -19,6 +20,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/supplier', supplierRoutes);
+
 
 // Catch-all route for undefined routes (optional)
 app.use((req, res, next) => {

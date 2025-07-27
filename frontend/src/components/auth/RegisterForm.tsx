@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -93,26 +94,45 @@ export function RegisterForm() {
     <Card className="w-full max-w-lg animate-fade-up shadow-lg border-none">
       <CardContent className="p-8">
         <form onSubmit={handleRegister} className="space-y-6">
-          {/* --- USER TYPE SELECTION --- */}
-          <div className="space-y-2">
-            <Label className="font-semibold text-gray-800">I am a...</Label>
-            <RadioGroup
-              value={userType}
-              onValueChange={(v) => setUserType(v as "vendor" | "supplier")}
-              className="grid grid-cols-2 gap-4"
-            >
-              <Label className="flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all data-[state=checked]:border-orange-500 data-[state=checked]:bg-orange-50/50 data-[state=checked]:shadow-inner">
-                <RadioGroupItem value="vendor" id="vendor" className="sr-only" />
-                <UtensilsCrossed className="h-8 w-8 mb-2 text-orange-600" />
-                <span className="font-medium text-gray-700">Food Vendor</span>
-              </Label>
-              <Label className="flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all data-[state=checked]:border-teal-500 data-[state=checked]:bg-teal-50/50 data-[state=checked]:shadow-inner">
-                <RadioGroupItem value="supplier" id="supplier" className="sr-only" />
-                <Truck className="h-8 w-8 mb-2 text-teal-600" />
-                <span className="font-medium text-gray-700">Supplier</span>
-              </Label>
-            </RadioGroup>
-          </div>
+         {/* --- USER TYPE SELECTION --- */}
+<div className="space-y-2">
+  <Label className="font-semibold text-gray-800">I am a...</Label>
+  <RadioGroup
+    value={userType}
+    onValueChange={(v) => setUserType(v as "vendor" | "supplier")}
+    className="grid grid-cols-2 gap-4"
+  >
+    <div className="relative">
+      <RadioGroupItem
+        value="vendor"
+        id="vendor"
+        className="peer sr-only"
+      />
+      <Label
+        htmlFor="vendor"
+        className="peer-checked:border-orange-500 peer-checked:bg-orange-50/50 peer-checked:shadow-inner flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all"
+      >
+        <UtensilsCrossed className="h-8 w-8 mb-2 text-orange-600" />
+        <span className="font-medium text-gray-700">Food Vendor</span>
+      </Label>
+    </div>
+    <div className="relative">
+      <RadioGroupItem
+        value="supplier"
+        id="supplier"
+        className="peer sr-only"
+      />
+      <Label
+        htmlFor="supplier"
+        className="peer-checked:border-teal-500 peer-checked:bg-teal-50/50 peer-checked:shadow-inner flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all"
+      >
+        <Truck className="h-8 w-8 mb-2 text-teal-600" />
+        <span className="font-medium text-gray-700">Supplier</span>
+      </Label>
+    </div>
+  </RadioGroup>
+</div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
