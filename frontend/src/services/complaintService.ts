@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api/complaints`;
+const API_URL = `https://freshconnect-kuwy.onrender.com/api/complaints`;
 
 /**
  * Submits a new complaint to the backend.

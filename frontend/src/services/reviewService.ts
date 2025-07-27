@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Assuming your suppliers are fetched from the users endpoint
-const API_URL = `${import.meta.env.VITE_API_URL}/api/reviews`;
+const API_URL = `https://freshconnect-kuwy.onrender.com/api/reviews`;
 
 /**
  * Submits a new review to the backend.

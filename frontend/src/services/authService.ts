@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/users`;
+const API_URL = `https://freshconnect-kuwy.onrender.com/api/users`;
 
 export interface LoginCredentials {
   email: string;
