@@ -156,6 +156,12 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
           <TabsContent value="analytics" className="text-center p-8"><p>{t("supplier_dashboard.tabs.analyticsComing")}</p></TabsContent>
         </Tabs>
       </div>
+      {/* UPDATE: Add Floating Chat Icon */}
+      <Link to="/supplier/chat">
+        <Button size="icon" className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50">
+          <MessageSquare className="h-7 w-7" />
+        </Button>
+      </Link>
     </div>
   );
 };

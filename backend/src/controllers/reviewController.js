@@ -1,12 +1,19 @@
-const { calculateTrustScore } = require("../utils/trustScore");
+const calculateTrustScore = require("../utils/trustScore");
 const Review = require("../models/reviewModel");
 const Product = require("../models/productModel");
 
 exports.createReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
-    const productId = req.params.id;
+    const productId = req.params.productId;
     const vendorId = req.user.id;
+    const reviewImages = req.files ? req.files.map((file) => file.path) : [];
+
+    if (!productId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Product ID is missing." });
+    }
 
     const product = await Product.findById(productId);
     if (!product) {
@@ -15,37 +22,42 @@ exports.createReview = async (req, res) => {
         .json({ success: false, message: "Product not found" });
     }
 
-    console.log("productId:", productId); // Add this line for debugging
-
+    // This is the product's supplier ID we need to save!
+    const supplierId = product.supplierId;
 
     const review = new Review({
       productId,
       vendorId,
+      supplierId,
       rating,
       comment,
-      reviewImages: [req.cloudinaryUrl], // Assuming you're using uploadMiddleware here too
+      reviewImages,
     });
 
     await review.save();
 
-    await calculateTrustScore(product.supplierId);
+    // Now this call will work because the review is linked to the supplier
+    await calculateTrustScore(supplierId);
 
     res.status(201).json({ success: true, review });
   } catch (error) {
+    console.error("Error creating review:", error);
     res.status(500).json({
       success: false,
       message: "Failed to create review",
       error: error.message,
     });
-    console.error('Error creating review:', error);
-    res.status(500).json({ success: false, message: 'Failed to create review', error: error.message });
   }
 };
 
 exports.getReviewsByProduct = async (req, res) => {
   try {
-    const productId = req.params.id;
-    const reviews = await Review.find({ productId });
+    // FIX 3 (Consistency): Use productId here as well for clarity.
+    const productId = req.params.productId;
+    const reviews = await Review.find({ productId }).populate(
+      "vendorId",
+      "name"
+    ); // Optional: populate vendor info
     res.status(200).json({ success: true, reviews });
   } catch (error) {
     res.status(500).json({

@@ -47,8 +47,21 @@ const UserSchema = new mongoose.Schema(
       max: 5,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+// FIX 2: Define the virtual 'name' property
+UserSchema.virtual('name').get(function() {
+    // 'this' refers to the document instance
+    if (this.firstName && this.lastName) {
+        return `${this.firstName} ${this.lastName}`;
+    }
+    return this.firstName || this.lastName || '';
+});
 
 // Hash password before saving
 UserSchema.pre("save", async function (next) {
