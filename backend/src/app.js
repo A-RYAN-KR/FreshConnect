@@ -1,11 +1,13 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 // Import Routes
-const userRoutes = require("./routes/userRoutes");
-const productRoutes = require("./routes/productRoutes");
-const reviewRoutes = require("./routes/reviewRoutes");
-const orderRoutes = require("./routes/orderRoutes");
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 const complaintRoutes = require("./routes/complaintRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 
@@ -15,12 +17,20 @@ const app = express();
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(fileUpload()); // Middleware for file uploads
+
+// --- Test Route ---
+app.get('/api/test', (req, res) => {
+    console.log("✅ /api/test route was hit successfully!");
+    res.status(200).json({ message: "Success! The test route is public and working." });
+});
 
 // --- Mount Routes ---
-app.use("/api/users", userRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/reviews", reviewRoutes);
-app.use("/api/orders", orderRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/contact', contactRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/chat", chatRoutes);
 
