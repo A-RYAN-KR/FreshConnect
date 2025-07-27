@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { api } from './api'; // Assuming you have a central API setup
 
 // Define an interface for the stats object for type safety
@@ -15,7 +16,7 @@ export interface SupplierStats {
 export const getSupplierDashboardStats = async (): Promise<SupplierStats> => {
     try {
         // The API call will go to GET /api/supplier/stats
-        const response = await api.get<{ success: boolean; stats: SupplierStats }>('/supplier/stats');
+        const response = await axios.get('/api/supplier/stats');
         if (response.data && response.data.success) {
             return response.data.stats;
         }
