@@ -22,11 +22,35 @@ import {
 import { getAllSuppliers } from "@/services/supplierService";
 import { Supplier, SupplierCard } from "./vendor/SupplierCard";
 import { OrderDialog } from "./vendor/OrderDialog";
+
 import { MyOrdersTab } from "./vendor/MyOrdersTab";
+
+import { MyOrdersTab } from './vendor/MyOrdersTab';
+import { getAllProducts } from "@/services/productService"; // Import product service
+import { ProductCard } from "./vendor/ProductCard"; // Import ProductCard component
+// --- Add this Product interface near the top ---
+interface SupplierInfo {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  trustScore?: number;
+  avatar?: string;
+}
+
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  price?: number;
+  images: string[];
+  supplierId?: SupplierInfo;
+}
+
 
 interface VendorDashboardProps {
   onBack: () => void;
 }
+
 
 const groupOrders = [
   {
@@ -55,6 +79,7 @@ const groupOrders = [
   },
 ];
 
+
 const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
   const { t } = useTranslation();
 
@@ -65,6 +90,14 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
   const [supplierToOrderFrom, setSupplierToOrderFrom] =
     useState<Supplier | null>(null);
+
+
+  // --- Product State ---
+  const [products, setProducts] = useState<unknown[]>([]); // Replace 'any[]' with your Product type
+  const [productLoading, setProductLoading] = useState(true);
+  const [productError, setProductError] = useState<string | null>(null);
+
+  // --- Data Fetching ---
 
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -82,12 +115,31 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
     fetchSuppliers();
   }, []);
 
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setProductLoading(true);
+        const data = await getAllProducts(); // Assuming getAllProducts returns { success: true, products: [...] }
+        setProducts(data.products || []);
+      } catch (err) {
+        setProductError("Failed to fetch products. Please try again later.");
+        console.error(err);
+      } finally {
+        setProductLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // --- Event Handlers ---
   const handleOrderNowClick = (supplier: Supplier) => {
     setSupplierToOrderFrom(supplier);
     setIsOrderDialogOpen(true);
   };
 
-  const handleOrderPlaced = (order: any) => {
+  const handleOrderPlaced = (order: unknown) => {
     console.log("Order placed successfully!", order);
   };
 
@@ -192,15 +244,10 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
                 <Tabs defaultValue="suppliers" className="w-full">
                   <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="suppliers">
-                      {t("vendor_dashboard.tabs.suppliers")}
-                    </TabsTrigger>
-                    <TabsTrigger value="groups">
-                      {t("vendor_dashboard.tabs.groups")}
-                    </TabsTrigger>
-                    <TabsTrigger value="orders">
-                      {t("vendor_dashboard.tabs.orders")}
-                    </TabsTrigger>
+
+                    <TabsTrigger value="suppliers">Browse Suppliers</TabsTrigger>
+                    <TabsTrigger value="products">Browse Products</TabsTrigger> {/* Changed "groups" to "products" */}
+                    <TabsTrigger value="orders">My Orders</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="suppliers" className="space-y-4">
@@ -236,9 +283,31 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                     )}
                   </TabsContent>
 
-                  <TabsContent value="groups" className="space-y-4">
-                    {/* Group Orders UI here */}
-                  </TabsContent>
+                  <TabsContent value="products" className="space-y-4">
+                {/* Product Listing */}
+                <div className="flex justify-between items-center">
+                  <h2 className="text-xl font-semibold">Available Products</h2>
+                </div>
+                {productLoading && <p>Loading products...</p>}
+                {productError && <p className="text-destructive">{productError}</p>}
+                {!productLoading && !productError && (
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {products.length > 0 ? (
+                      products.map((product: Product) => (
+                        <ProductCard key={product._id} product={product} />
+                      ))
+                    ) : (
+                      <Card>
+                        <CardContent className="p-6 text-center text-muted-foreground">
+                          No products found.
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                )}
+              </TabsContent>
+
+
 
                   <TabsContent value="orders" className="space-y-4">
                     <MyOrdersTab />

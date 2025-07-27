@@ -25,6 +25,12 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: [true, 'Password is required'], minlength: 8, select: false },
     userType: { type: String, enum: ['vendor', 'supplier'], required: true },
     address: AddressSchema,
+    averageRating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
+    },
   },
   { timestamps: true }
 );
