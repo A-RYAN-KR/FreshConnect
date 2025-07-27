@@ -3,8 +3,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, Heart } from "lucide-react";
-import { Product } from "@/components/supplier/ProductCard"; // Re-using the Product interface
+import { Product } from "@/components/supplier/ProductCard";
+import { Star, Heart, MessageCircle } from "lucide-react";
 
 // Define the shape of a Supplier based on your API response
 export interface Supplier {
@@ -21,10 +21,11 @@ export interface Supplier {
 
 interface SupplierCardProps {
     supplier: Supplier;
-    onOrderNow: (supplier: Supplier) => void; // Callback passes the entire supplier
+    onOrderNow: (supplier: Supplier) => void;
+    onChatClick: (supplierId: string) => void;
 }
 
-export const SupplierCard = ({ supplier, onOrderNow }: SupplierCardProps) => {
+export const SupplierCard = ({ supplier, onOrderNow, onChatClick }: SupplierCardProps) => {
     // Use the first product for display purposes, or provide a fallback.
     const representativeProduct = supplier.products?.[0];
 
@@ -87,6 +88,10 @@ export const SupplierCard = ({ supplier, onOrderNow }: SupplierCardProps) => {
                             disabled={!supplier.products || supplier.products.length === 0}
                         >
                             Order Now
+                        </Button>
+                        {/* UPDATE: Add Chat Button */}
+                        <Button variant="outline" size="sm" onClick={() => onChatClick(supplier._id)}>
+                            <MessageCircle className="w-4 h-4" />
                         </Button>
                         <Button variant="outline" size="sm">
                             <Heart className="w-4 h-4" />
