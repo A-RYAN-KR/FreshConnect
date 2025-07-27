@@ -93,5 +93,46 @@
       ]
     },
     "copyright": "© 2024 FreshConnect. All rights reserved."
+  },
+  "supplier_dashboard": {
+    "title": "Supplier Dashboard",
+    "trustScore": "Trust Score",
+    "stats": {
+      "totalRevenue": "Total Revenue",
+      "activeOrders": "Active Orders",
+      "productsListed": "Products Listed",
+      "avgRating": "Avg Rating"
+    },
+    "tabs": {
+      "products": "My Products",
+      "orders": "Orders",
+      "bids": "Group Order Bids",
+      "analytics": "Analytics",
+      "bidsComing": "Bids section coming soon.",
+      "analyticsComing": "Analytics section coming soon."
+    }
+  },
+  "vendor_dashboard": {
+    "title": "Vendor Dashboard",
+    "trustScore": "Trust Score",
+    "quickStats": {
+      "title": "Quick Stats",
+      "orders": "Orders This Month",
+      "savings": "Total Savings",
+      "favorites": "Favorite Suppliers"
+    },
+    "filters": "Filters",
+    "searchPlaceholder": "Search for suppliers, products...",
+    "filter": "Filter",
+    "tabs": {
+      "suppliers": "Browse Suppliers",
+      "groups": "Group Orders",
+      "orders": "My Orders"
+    },
+    "availableSuppliers": "Available Suppliers",
+    "compare": "Compare Selected",
+    "loading": "Loading suppliers...",
+    "noSuppliers": "No suppliers found.",
+    "errorFetching": "Failed to fetch suppliers. Please try again later."
   }
 }
