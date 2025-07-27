@@ -4,24 +4,42 @@
 
 A full-stack web platform built with the MERN stack, designed to connect street food vendors with verified raw material suppliers across India. FreshConnect aims to bring transparency, trust, and efficiency to the local food supply chain.
 
-[**Live Demo**](https://your-live-app-link.com)
+[**Live Demo**](https://fresh-connect-nexus.vercel.app/)
 
 ---
 
-![FreshConnect Screenshot](./screenshot.png)
-
 ## Table of Contents
 
+- [Application Preview](#application-preview)
 - [About The Project](#about-the-project)
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation & Setup](#installation--setup)
 - [API Endpoints](#api-endpoints)
+- [Our Team](#our-team)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
+
+## Application Preview
+
+A glimpse into the FreshConnect platform, from the landing page to the functional user dashboards.
+
+| Landing Page & Multi-Language Support | Clean & Simple Login |
+| :-----------------------------------: | :------------------: |
+| ![FreshConnect Landing Page](screenshots/screenshot-landing.png) | ![FreshConnect Login Page](screenshots/screenshot-login.png) |
+| **Supplier Dashboard** | **Vendor Complaint System** |
+| ![Supplier Dashboard](screenshots/screenshot-supplier-dashboard.png) | ![Vendor Complaint Modal](screenshots/screenshot-vendor-complaint.png) |
+
+<!-- 
+**Note:** Make sure you have a `screenshots` folder in your project's root with the following images:
+- `screenshot-landing.png`
+- `screenshot-login.png`
+- `screenshot-supplier-dashboard.png`
+- `screenshot-vendor-complaint.png`
+-->
+
+---
 
 ## About The Project
 
@@ -61,7 +79,7 @@ This project is built using modern web technologies:
 | :------- | :------ | :------- | :----------------- |
 | **React.js** | **Node.js** | **MongoDB** | **Cloudinary** (Image Storage) |
 | **Redux Toolkit** | **Express.js** | **Mongoose** | **Nodemailer** (Emails) |
-| **Axios** | **JWT** | | **Vercel / Netlify** (Frontend) |
+| **Axios** | **JWT** | | **Vercel** (Frontend) |
 | **Tailwind CSS** | | | **Render / Cyclic** (Backend) |
 
 ---
@@ -119,17 +137,14 @@ Make sure you have the following installed on your machine:
     ```
 
 5.  **Run the Application:**
-    You can run the frontend and backend servers separately.
-
-    - **Run the Backend Server (from the `backend` folder):**
+    - **Backend Server (from the `backend` folder):**
       ```sh
       npm run dev
       ```
-    - **Run the Frontend Server (from the `frontend` folder):**
+    - **Frontend Server (from the `frontend` folder):**
       ```sh
       npm start
       ```
-    The application should now be running, with the frontend on `http://localhost:3000` and the backend on `http://localhost:5001`.
 
 ---
 
@@ -144,10 +159,21 @@ A brief overview of the core API routes:
 | `POST`      | `/api/products`             | (Supplier) Create a new product listing.  | Yes       |
 | `GET`       | `/api/products`             | Get all available products.               | No        |
 | `POST`      | `/api/orders`               | (Vendor) Create a new order.              | Yes       |
-| `GET`       | `/api/orders/myorders`      | (Vendor) Get all orders placed by you.    | Yes       |
-| `GET`       | `/api/orders/supplier`      | (Supplier) Get all orders received.       | Yes       |
 | `PUT`       | `/api/orders/:id/status`    | (Supplier) Update an order's status.      | Yes       |
 | `POST`      | `/api/contact`              | Send a message via the contact form.      | No        |
+
+---
+
+## Our Team
+
+This project was brought to life by a dedicated team of developers and thinkers.
+
+| Name | Contribution | Profile |
+| :--- | :----------- | :------ |
+| **Aryan Jha** | Frontend & Backend | [![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=flat-square&logo=github)](https://github.com/username) <!--- Replace username --> |
+| **Ashish Kumar** | Backend & DBMS | [![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=flat-square&logo=github)](https://github.com/username) <!--- Replace username --> |
+| **Aryaa Sharma** | Ideation & UI/UX | [![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=flat-square&logo=github)](https://github.com/username) <!--- Replace username --> |
+| **Baladitya Khantwal**| GenAI | [![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=flat-square&logo=github)](https://github.com/sm00th76) |
 
 ---
 
@@ -166,7 +192,5 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ---
 
 ## Contact
-
-Baladitya Khantwal - [LinkedIn](https://www.linkedin.com/in/baladitya-khantwal-16204b291)
 
 Project Link: [https://github.com/sm00th76/freshconnect](https://github.com/sm00th76/freshconnect)
