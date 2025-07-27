@@ -1,7 +1,7 @@
 // src/controller/userController.js
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-const { calculateTrustScore } = require("../utils/trustScore");
+const calculateTrustScore  = require("../utils/trustScore");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {

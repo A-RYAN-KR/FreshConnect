@@ -1,6 +1,6 @@
 const Order = require("../models/orderModel");
 const Product = require("../models/productModel");
-const { calculateTrustScore } = require("../utils/trustScore");
+const calculateTrustScore = require("../utils/trustScore");
 const User = require("../models/userModel");
 
 exports.createOrder = async (req, res) => {
