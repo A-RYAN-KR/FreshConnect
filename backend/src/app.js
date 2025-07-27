@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const fileUpload = require('express-fileupload');
 
 // Import Routes
 const userRoutes = require('./routes/userRoutes');
@@ -17,7 +16,6 @@ const app = express();
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
-app.use(fileUpload()); // Middleware for file uploads
 
 // --- Test Route ---
 app.get('/api/test', (req, res) => {
