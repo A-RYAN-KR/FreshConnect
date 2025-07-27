@@ -1,0 +1,7 @@
+Flask
+Flask-Cors
+langchain-google-genai
+pydantic
+python-dotenv
+httpx
+gunicorn
