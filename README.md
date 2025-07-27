@@ -206,4 +206,4 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Project Link: [https://github.com/sm00th76/freshconnect]([https://github.com/sm00th76/freshconnect](https://github.com/A-RYAN-KR/FreshConnect.git))
+Project Link: [![repo link](https://github.com/A-RYAN-KR/FreshConnect.git)
