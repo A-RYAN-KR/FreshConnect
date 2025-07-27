@@ -1,5 +1,6 @@
-const Product = require('../models/productModel');
-const User = require('../models/userModel');
+const { calculateTrustScore } = require("../utils/trustScore");
+const Product = require("../models/productModel");
+const User = require("../models/userModel");
 
 exports.createProduct = async (req, res) => {
   try {
@@ -32,17 +33,20 @@ exports.createProduct = async (req, res) => {
 
     await product.save();
 
+    const supplierProductCount = await Product.countDocuments({ supplierId });
+
+    if (supplierProductCount <= 25) {
+      await calculateTrustScore(supplierId);
+    }
     // Return the full product object, as the frontend expects it
     res.status(201).json(product); // <-- Send the product directly for simplicity
   } catch (error) {
     console.error("Error creating product:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to create product",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to create product",
+      error: error.message,
+    });
   }
 };
 
@@ -51,8 +55,12 @@ exports.getAllProducts = async (req, res) => {
     const products = await Product.find();
     res.status(200).json({ success: true, products });
   } catch (error) {
-    console.error('Error getting products:', error);
-    res.status(500).json({ success: false, message: 'Failed to get products', error: error.message });
+    console.error("Error getting products:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get products",
+      error: error.message,
+    });
   }
 };
 
@@ -60,12 +68,18 @@ exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
     res.status(200).json({ success: true, product });
   } catch (error) {
-    console.error('Error getting product:', error);
-    res.status(500).json({ success: false, message: 'Failed to get product', error: error.message });
+    console.error("Error getting product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get product",
+      error: error.message,
+    });
   }
 };
 
@@ -82,12 +96,10 @@ exports.updateProduct = async (req, res) => {
 
     // Authorization Check
     if (product.supplierId.toString() !== req.user.id.toString()) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "You are not authorized to update this product",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this product",
+      });
     }
 
     // ✅ THE FIX: Manually build the update object from the request body.
@@ -109,16 +121,16 @@ exports.updateProduct = async (req, res) => {
       { new: true, runValidators: true } // `new: true` returns the updated doc, `runValidators` checks schema rules
     );
 
+    await calculateTrustScore(req.user.id);
+
     res.status(200).json({ success: true, product: updatedProduct });
   } catch (error) {
     console.error("Error updating product:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to update product",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to update product",
+      error: error.message,
+    });
   }
 };
 
@@ -126,18 +138,30 @@ exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     // Check if the user is the supplier of the product
     if (product.supplierId.toString() !== req.user.id.toString()) {
-      return res.status(403).json({ success: false, message: 'You are not authorized to delete this product' });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this product",
+      });
     }
 
     await Product.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: 'Product deleted successfully' });
+    await calculateTrustScore(req.user.id);
+    res
+      .status(200)
+      .json({ success: true, message: "Product deleted successfully" });
   } catch (error) {
-    console.error('Error deleting product:', error);
-    res.status(500).json({ success: false, message: 'Failed to delete product', error: error.message });
+    console.error("Error deleting product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete product",
+      error: error.message,
+    });
   }
 };

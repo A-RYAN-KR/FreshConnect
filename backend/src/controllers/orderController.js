@@ -1,5 +1,7 @@
-const Order = require('../models/orderModel');
-const Product = require('../models/productModel');
+const Order = require("../models/orderModel");
+const Product = require("../models/productModel");
+const { calculateTrustScore } = require("../utils/trustScore");
+const User = require("../models/userModel");
 
 exports.createOrder = async (req, res) => {
   try {
@@ -8,11 +10,15 @@ exports.createOrder = async (req, res) => {
 
     const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     if (product.stockQuantity < quantity) {
-      return res.status(400).json({ success: false, message: 'Insufficient stock' });
+      return res
+        .status(400)
+        .json({ success: false, message: "Insufficient stock" });
     }
 
     const totalPrice = product.price * quantity;
@@ -33,7 +39,11 @@ exports.createOrder = async (req, res) => {
 
     res.status(201).json({ success: true, order });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to create order', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to create order",
+      error: error.message,
+    });
   }
 };
 
@@ -46,7 +56,11 @@ exports.getMyOrders = async (req, res) => {
       .sort({ createdAt: -1 }); // Sort by most recent
     res.status(200).json({ success: true, orders });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to get orders', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to get orders",
+      error: error.message,
+    });
   }
 };
 
@@ -56,13 +70,17 @@ exports.getSupplierOrders = async (req, res) => {
   try {
     const supplierId = req.user.id;
     const orders = await Order.find({ supplierId })
-      .populate('vendorId', 'firstName lastName email') // Get the vendor's details
-      .populate('productId', 'name images') // Get the product's details
+      .populate("vendorId", "firstName lastName email") // Get the vendor's details
+      .populate("productId", "name images") // Get the product's details
       .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, orders });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to get supplier orders', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to get supplier orders",
+      error: error.message,
+    });
   }
 };
 
@@ -70,28 +88,41 @@ exports.getSupplierOrders = async (req, res) => {
 // @desc    Update the status of an order
 // @route   PUT /api/orders/:id/status
 exports.updateOrderStatus = async (req, res) => {
-    try {
-        const { status } = req.body;
-        const order = await Order.findById(req.params.id);
+  try {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
 
-        if (!order) {
-            return res.status(404).json({ success: false, message: 'Order not found' });
-        }
-
-        // Authorization: Ensure the logged-in user is the supplier for this order
-        if (order.supplierId.toString() !== req.user.id.toString()) {
-            return res.status(403).json({ success: false, message: 'User not authorized to update this order' });
-        }
-
-        order.status = status;
-        await order.save();
-
-        const populatedOrder = await Order.findById(order._id)
-          .populate("vendorId", "firstName lastName email")
-          .populate("productId", "name images");
-
-        res.status(200).json({ success: true, order: populatedOrder });
-    } catch (error) {
-        res.status(500).json({ success: false, message: 'Failed to update order status', error: error.message });
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
     }
-}
+
+    // Authorization: Ensure the logged-in user is the supplier for this order
+    if (order.supplierId.toString() !== req.user.id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "User not authorized to update this order",
+      });
+    }
+
+    order.status = status;
+    await order.save();
+
+    if (status === "delivered") {
+      await calculateTrustScore(order.supplierId);
+    }
+
+    const populatedOrder = await Order.findById(order._id)
+      .populate("vendorId", "firstName lastName email")
+      .populate("productId", "name images");
+
+    res.status(200).json({ success: true, order: populatedOrder });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update order status",
+      error: error.message,
+    });
+  }
+};

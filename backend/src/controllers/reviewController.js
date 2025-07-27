@@ -1,5 +1,6 @@
-const Review = require('../models/reviewModel');
-const Product = require('../models/productModel');
+const { calculateTrustScore } = require("../utils/trustScore");
+const Review = require("../models/reviewModel");
+const Product = require("../models/productModel");
 
 exports.createReview = async (req, res) => {
   try {
@@ -7,19 +8,32 @@ exports.createReview = async (req, res) => {
     const productId = req.params.id;
     const vendorId = req.user.id;
 
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+
     const review = new Review({
       productId,
       vendorId,
       rating,
       comment,
-      reviewImages: [req.cloudinaryUrl] // Assuming you're using uploadMiddleware here too
+      reviewImages: [req.cloudinaryUrl], // Assuming you're using uploadMiddleware here too
     });
 
     await review.save();
 
+    await calculateTrustScore(product.supplierId);
+
     res.status(201).json({ success: true, review });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to create review', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to create review",
+      error: error.message,
+    });
   }
 };
 
@@ -29,6 +43,10 @@ exports.getReviewsByProduct = async (req, res) => {
     const reviews = await Review.find({ productId });
     res.status(200).json({ success: true, reviews });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to get reviews', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to get reviews",
+      error: error.message,
+    });
   }
 };
