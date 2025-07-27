@@ -16,7 +16,11 @@ export interface SupplierStats {
 export const getSupplierDashboardStats = async (): Promise<SupplierStats> => {
     try {
         // The API call will go to GET /api/supplier/stats
-        const response = await axios.get('/api/supplier/stats');
+        const response = await axios.get('/api/supplier/stats' , {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
         if (response.data && response.data.success) {
             return response.data.stats;
         }
