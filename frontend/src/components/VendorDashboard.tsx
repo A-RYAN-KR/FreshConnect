@@ -23,8 +23,6 @@ import { getAllSuppliers } from "@/services/supplierService";
 import { Supplier, SupplierCard } from "./vendor/SupplierCard";
 import { OrderDialog } from "./vendor/OrderDialog";
 
-import { MyOrdersTab } from "./vendor/MyOrdersTab";
-
 import { MyOrdersTab } from './vendor/MyOrdersTab';
 import { getAllProducts } from "@/services/productService"; // Import product service
 import { ProductCard } from "./vendor/ProductCard"; // Import ProductCard component
