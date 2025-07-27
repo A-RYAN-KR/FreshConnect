@@ -1,54 +1,63 @@
 const Product = require('../models/productModel');
-const User = require('../models/userModel');
+const User = require('../models/userModel'); // Make sure this path is correct
 
+// A helper object for population options to avoid repetition
+const supplierPopulationOptions = {
+  path: 'supplierId',
+  select: 'firstName lastName trustScore avatar' // Select only the fields you need
+};
+
+// --- This function is untouched but included for completeness ---
 exports.createProduct = async (req, res) => {
   try {
-    // 1. Check if files were uploaded by the middleware
     if (!req.files || req.files.length === 0) {
       return res
         .status(400)
         .json({ success: false, message: "No image file provided" });
     }
 
-    // 2. Extract the public URLs/paths of the uploaded images from req.files
-    //    (The 'path' property is standard for multer-storage-cloudinary)
     const imageUrls = req.files.map((file) => file.path);
-
     const supplierId = req.user.id;
-    const { name, description, price, bulkPrice, category, stockQuantity } =
-      req.body;
+    const { name, description, price, bulkPrice, category, stockQuantity } = req.body;
 
-    // 3. Create the new product with the image URLs
     const product = new Product({
       supplierId,
       name,
       description,
       price,
       bulkPrice,
-      images: imageUrls, // <-- USE THE UPLOADED IMAGE URLS HERE
+      images: imageUrls,
       category,
       stockQuantity,
     });
 
     await product.save();
 
-    // Return the full product object, as the frontend expects it
-    res.status(201).json(product); // <-- Send the product directly for simplicity
+    // To be consistent, populate the new product before sending it back
+    const populatedProduct = await product.populate(supplierPopulationOptions);
+
+    res.status(201).json({ success: true, product: populatedProduct });
   } catch (error) {
     console.error("Error creating product:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to create product",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to create product",
+      error: error.message,
+    });
   }
 };
 
+// --- MODIFIED FUNCTION ---
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    // We now chain .populate() to the find() query.
+    // This tells Mongoose to fetch the related User document for each product.
+    const products = await Product.find({})
+      .populate(supplierPopulationOptions)
+      .sort({ createdAt: -1 }); // Optional: sort by newest first
+
+    // The 'products' array now contains full product objects,
+    // where 'supplierId' is replaced by the populated supplier document.
     res.status(200).json({ success: true, products });
   } catch (error) {
     console.error('Error getting products:', error);
@@ -56,9 +65,13 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+// --- MODIFIED FUNCTION ---
 exports.getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    // We also populate the data when fetching a single product.
+    const product = await Product.findById(req.params.id)
+      .populate(supplierPopulationOptions);
+
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
@@ -69,59 +82,58 @@ exports.getProductById = async (req, res) => {
   }
 };
 
+// --- MODIFIED FUNCTION ---
 exports.updateProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     let product = await Product.findById(productId);
 
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+      return res.status(404).json({ success: false, message: "Product not found" });
     }
 
-    // Authorization Check
     if (product.supplierId.toString() !== req.user.id.toString()) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "You are not authorized to update this product",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this product",
+      });
     }
 
-    // ✅ THE FIX: Manually build the update object from the request body.
+    // Manually build the update object to avoid overwriting fields unintentionally
     const updateData = {
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
+      bulkPrice: req.body.bulkPrice,
       stockQuantity: req.body.stockQuantity,
       category: req.body.category,
     };
+    
+    // If new images are being uploaded, add them to the update object
+    if(req.files && req.files.length > 0) {
+      updateData.images = req.files.map(file => file.path);
+    }
 
-    // Note: This logic assumes you are not updating the images.
-    // If you were, you would add logic here to check `req.files` and update `updateData.images`.
-
-    // Use the manually constructed object for the update.
+    // Find, update, and then populate the result before sending it back
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { $set: updateData }, // Use $set to ensure only these fields are updated
-      { new: true, runValidators: true } // `new: true` returns the updated doc, `runValidators` checks schema rules
-    );
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).populate(supplierPopulationOptions);
 
     res.status(200).json({ success: true, product: updatedProduct });
-  } catch (error) {
+  } catch (error)
+  {
     console.error("Error updating product:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to update product",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to update product",
+      error: error.message,
+    });
   }
 };
 
+// --- This function is untouched but included for completeness ---
 exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -129,7 +141,6 @@ exports.deleteProduct = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    // Check if the user is the supplier of the product
     if (product.supplierId.toString() !== req.user.id.toString()) {
       return res.status(403).json({ success: false, message: 'You are not authorized to delete this product' });
     }

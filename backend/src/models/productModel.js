@@ -1,16 +1,20 @@
+// backend/src/models/productModel.js
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-  supplierId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  // This 'ref' property is what links this schema to the 'User' schema
+  supplierId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // <-- This MUST match the model name from `mongoose.model('User', ...)`
+    required: true
+  },
   name: { type: String, required: true },
   description: String,
   price: { type: Number, required: true },
-  bulkPrice: { type: Number }, // Price for bulk purchase
-  images: [String], // Array of Cloudinary image URLs
+  bulkPrice: { type: Number },
+  images: [String],
   category: String,
   stockQuantity: { type: Number, default: 0 },
 }, { timestamps: true });
 
-const Product = mongoose.model('Product', productSchema);
-
-module.exports = Product;
+module.exports = mongoose.model('Product', productSchema);
