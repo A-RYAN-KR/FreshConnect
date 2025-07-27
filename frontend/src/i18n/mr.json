@@ -93,5 +93,46 @@
       ]
     },
     "copyright": "© 2024 फ्रेशकनेक्ट. सर्व हक्क राखीव."
+  },
+  "supplier_dashboard": {
+    "title": "पुरवठादार डॅशबोर्ड",
+    "trustScore": "विश्वास गुण",
+    "stats": {
+      "totalRevenue": "एकूण महसूल",
+      "activeOrders": "सक्रिय ऑर्डर्स",
+      "productsListed": "सूचीतील उत्पादने",
+      "avgRating": "सरासरी रेटिंग"
+    },
+    "tabs": {
+      "products": "माझी उत्पादने",
+      "orders": "ऑर्डर्स",
+      "bids": "समूह ऑर्डर बीड्स",
+      "analytics": "विश्लेषण",
+      "bidsComing": "बीड्स विभाग लवकरच येत आहे.",
+      "analyticsComing": "विश्लेषण विभाग लवकरच येत आहे."
+    }
+  },
+  "vendor_dashboard": {
+    "title": "विक्रेता डॅशबोर्ड",
+    "trustScore": "विश्वास स्कोर",
+    "quickStats": {
+      "title": "त्वरित आकडेवारी",
+      "orders": "या महिन्याचे ऑर्डर्स",
+      "savings": "एकूण बचत",
+      "favorites": "आवडते पुरवठादार"
+    },
+    "filters": "फिल्टर",
+    "searchPlaceholder": "पुरवठादार, उत्पादने शोधा...",
+    "filter": "फिल्टर",
+    "tabs": {
+      "suppliers": "पुरवठादार",
+      "groups": "समूह ऑर्डर",
+      "orders": "माझी ऑर्डर्स"
+    },
+    "availableSuppliers": "उपलब्ध पुरवठादार",
+    "compare": "तुलना करा",
+    "loading": "पुरवठादार लोड करत आहोत...",
+    "noSuppliers": "कोणतेही पुरवठादार आढळले नाहीत.",
+    "errorFetching": "पुरवठादार मिळवताना त्रुटी. कृपया नंतर प्रयत्न करा."
   }
 }
