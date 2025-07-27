@@ -4,6 +4,6 @@ import './index.css'
 import './i18n/i18n.ts'
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 createRoot(document.getElementById("root")!).render(<App />);

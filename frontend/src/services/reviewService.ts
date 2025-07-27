@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Assuming your suppliers are fetched from the users endpoint
-const API_URL = "http://localhost:5000/api/reviews";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/reviews`;
 
 /**
  * Submits a new review to the backend.
@@ -58,7 +58,7 @@ export const fetchProductReviewCount = async (productId: string): Promise<number
 export const fetchProductReviews = async (productId: string): Promise<any> => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/reviews/${productId}`,
+      `${API_URL}/${productId}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

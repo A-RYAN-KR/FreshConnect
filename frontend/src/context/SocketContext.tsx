@@ -18,7 +18,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
     useEffect(() => {
         if (user?._id) {
-            const newSocket = io("http://localhost:5000", {
+            const newSocket = io(`${import.meta.env.VITE_API_URL}`, {
                 query: { userId: user._id }, // Pass userId for authentication on the backend
             });
             setSocket(newSocket);

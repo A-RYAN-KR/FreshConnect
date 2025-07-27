@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // The base URL for your chat-related API endpoints
-const API_URL = "http://localhost:5000/api/chat";
+const API_URL = import.meta.env.VITE_API_URL;
 
 // --- Reusable Type Definitions ---
 // These types should match the data structures sent by your backend.
