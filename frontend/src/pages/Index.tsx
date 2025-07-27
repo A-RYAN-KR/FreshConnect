@@ -12,17 +12,27 @@ import heroImage from "@/assets/hero-marketplace.jpg";
 import vendorIcon from "@/assets/vendor-icon.jpg";
 import supplierIcon from "@/assets/supplier-icon.jpg";
 import { Link } from "react-router-dom";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
+
+const SmoothScrollStyle = () => (
+  <style>{`
+    html {
+      scroll-behavior: smooth;
+    }
+  `}</style>
+);
 
 const LandingPage = () => {
   const { t, i18n } = useTranslation();
 
-  const changeLanguage = (lng: string) => {
+  const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };
 
   return (
     <div className="min-h-screen bg-background">
+      <SmoothScrollStyle />
+
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -44,13 +54,9 @@ const LandingPage = () => {
                 <DropdownMenuItem onClick={() => changeLanguage('mr')}>मराठी (Marathi)</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* ✅ CORRECTED KEYS */}
-            <Button variant="ghost">{t('buttons.about')}</Button>
-            <Button variant="ghost">{t('buttons.contact')}</Button>
-            <Link to="/auth/login">
-              <Button variant="outline">{t('buttons.login')}</Button>
-            </Link>
+            <Button asChild variant="ghost"><a href="#about">{t('buttons.about')}</a></Button>
+            <Button asChild variant="ghost"><a href="#contact">{t('buttons.contact')}</a></Button>
+            <Button asChild variant="outline"><Link to="/auth/login">{t('buttons.login')}</Link></Button>
           </div>
         </div>
       </header>
@@ -62,58 +68,37 @@ const LandingPage = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <Badge className="w-fit bg-primary/10 text-primary border-primary/20">
-                  {t('hero.badge')}
-                </Badge>
+                <Badge className="w-fit bg-primary/10 text-primary border-primary/20">{t('hero.badge')}</Badge>
                 <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
                   {t('hero.title.part1')}
-                  <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    {t('hero.title.part2')}
-                  </span>
+                  <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{t('hero.title.part2')}</span>
                 </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed">
-                  {t('hero.subtitle')}
-                </p>
+                <p className="text-xl text-muted-foreground leading-relaxed">{t('hero.subtitle')}</p>
               </div>
-
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/auth/login" state={{ userType: 'vendor' }} className="flex-1">
-                  <Button variant="hero" size="hero" className="w-full">
-                    <Users className="w-5 h-5" />
+                  <Button size="hero" className="w-full text-primary-foreground shadow-lg hover:shadow-glow hover:brightness-110 transition-all duration-300 transform hover:-translate-y-1">
+                    <Users className="w-5 h-5 mr-2" />
                     {t('buttons.vendor')}
                   </Button>
                 </Link>
                 <Link to="/auth/login" state={{ userType: 'supplier' }} className="flex-1">
-                  <Button variant="supplier" size="hero" className="w-full">
-                    <TrendingUp className="w-5 h-5" />
+                  <Button size="hero" className="bg-green-500 w-full text-secondary-foreground shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-green-400">
+                    <TrendingUp className="w-5 h-5 mr-2" />
                     {t('buttons.supplier')}
                   </Button>
                 </Link>
               </div>
 
               <div className="grid grid-cols-3 gap-6 pt-8">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">1000+</div>
-                  <div className="text-sm text-muted-foreground">{t('metrics.vendors')}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-secondary">500+</div>
-                  <div className="text-sm text-muted-foreground">{t('metrics.suppliers')}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-trust">95%</div>
-                  <div className="text-sm text-muted-foreground">{t('metrics.trust')}</div>
-                </div>
+                <div className="text-center"><div className="text-2xl font-bold text-primary">1000+</div><div className="text-sm text-muted-foreground">{t('metrics.vendors')}</div></div>
+                <div className="text-center"><div className="text-2xl font-bold text-secondary">500+</div><div className="text-sm text-muted-foreground">{t('metrics.suppliers')}</div></div>
+                <div className="text-center"><div className="text-2xl font-bold text-trust">95%</div><div className="text-sm text-muted-foreground">{t('metrics.trust')}</div></div>
               </div>
             </div>
-
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl blur-3xl"></div>
-              <img
-                src={heroImage}
-                alt={t('hero.badge')}
-                className="relative rounded-2xl shadow-2xl w-full h-auto"
-              />
+              <img src={heroImage} alt={t('hero.badge')} className="relative rounded-2xl shadow-2xl w-full h-auto"/>
             </div>
           </div>
         </div>
@@ -126,7 +111,6 @@ const LandingPage = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">{t('choose_role.title')}</h2>
             <p className="text-xl text-muted-foreground">{t('choose_role.subtitle')}</p>
           </div>
-
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Link to="/auth/login" state={{ userType: 'vendor' }}>
               <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
@@ -144,7 +128,6 @@ const LandingPage = () => {
                 </CardContent>
               </Card>
             </Link>
-
             <Link to="/auth/login" state={{ userType: 'supplier' }}>
               <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-secondary/50">
                 <CardHeader className="text-center pb-6">
@@ -165,54 +148,51 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Trust & Features Section */}
-      <section className="py-20">
+      {/* About Us Section */}
+      <section id="about" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              {t('trust_section.title')}
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              {t('trust_section.subtitle')}
-            </p>
+          <div className="text-center mb-16 max-w-3xl mx-auto">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">{t('about_section.title')}</h2>
+            <p className="text-xl text-muted-foreground">{t('about_section.subtitle')}</p>
+            <p className="mt-8 text-lg text-foreground/80 leading-relaxed">{t('about_section.empowerment_paragraph')}</p>
           </div>
-
+          <div className="text-center mb-16">
+            <h3 className="text-2xl font-semibold">{t('about_section.approach_title')}</h3>
+          </div>
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center">
+            <Card className="text-center shadow-soft hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
               <CardHeader>
-                <Shield className="w-12 h-12 text-trust mx-auto mb-4" />
-                <CardTitle className="text-trust">{t('trust_section.cards.verified.title')}</CardTitle>
+                <Shield className="w-12 h-12 text-primary mx-auto mb-4" />
+                <CardTitle className="text-primary">{t('about_section.cards.transparency.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">{t('trust_section.cards.verified.desc')}</p>
+                <p className="text-muted-foreground">{t('about_section.cards.transparency.desc')}</p>
               </CardContent>
             </Card>
-
-            <Card className="text-center">
+            <Card className="text-center shadow-soft hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
               <CardHeader>
-                <Star className="w-12 h-12 text-primary mx-auto mb-4" />
-                <CardTitle className="text-primary">{t('trust_section.cards.ratings.title')}</CardTitle>
+                <Users className="w-12 h-12 text-secondary mx-auto mb-4" />
+                <CardTitle className="text-secondary">{t('about_section.cards.community.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">{t('trust_section.cards.ratings.desc')}</p>
+                <p className="text-muted-foreground">{t('about_section.cards.community.desc')}</p>
               </CardContent>
             </Card>
-
-            <Card className="text-center">
+            <Card className="text-center shadow-soft hover:shadow-trust transition-all duration-300 transform hover:-translate-y-2">
               <CardHeader>
-                <PhoneCall className="w-12 h-12 text-secondary mx-auto mb-4" />
-                <CardTitle className="text-secondary">{t('trust_section.cards.support.title')}</CardTitle>
+                <CheckCircle className="w-12 h-12 text-trust mx-auto mb-4" />
+                <CardTitle className="text-trust">{t('about_section.cards.trust.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">{t('trust_section.cards.support.desc')}</p>
+                <p className="text-muted-foreground">{t('about_section.cards.trust.desc')}</p>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
-
+      
       {/* Footer */}
-      <footer className="bg-muted py-12 border-t">
+      <footer id="contact" className="bg-muted py-12 border-t">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -220,9 +200,7 @@ const LandingPage = () => {
                 <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
                 <h3 className="text-lg font-bold">FreshConnect</h3>
               </div>
-              <p className="text-muted-foreground">
-                {t('footer.about')}
-              </p>
+              <p className="text-muted-foreground">{t('footer.about')}</p>
             </div>
             <div>
               <h4 className="font-semibold mb-4">{t('footer.vendors.title')}</h4>

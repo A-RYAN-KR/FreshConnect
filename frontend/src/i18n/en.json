@@ -28,9 +28,7 @@
     "desc": "Find trusted suppliers and get the best prices for your ingredients",
     "features": [
       "Compare prices across suppliers",
-      "Join group orders for bulk discounts",
-      "Track orders in real-time",
-      "Access verified supplier ratings"
+      "Join group orders for bulk discounts"
     ],
     "cta": "Start as Vendor"
   },
@@ -39,27 +37,27 @@
     "desc": "Reach more vendors and grow your business with verified listings",
     "features": [
       "List products with real-time pricing",
-      "Bid on group orders",
-      "Manage delivery schedules",
-      "Build trust with verified reviews"
+      "Bid on group orders"
     ],
     "cta": "Start as Supplier"
   },
-  "trust_section": {
-    "title": "Built on Trust & Transparency",
-    "subtitle": "Every supplier verified, every transaction secure",
+  "about_section": {
+    "title": "More Than a Marketplace: Our Mission",
+    "subtitle": "We saw the daily hustle of street food vendors—the heart of our city's culture—and we knew there had to be a better way to connect them to quality ingredients.",
+    "empowerment_paragraph": "FreshConnect is more than just a platform; it's a social initiative. We believe street food vendors are the unsung heroes of our culinary landscape—micro-entrepreneurs who serve our communities with passion. For too long, their growth has been limited by an opaque supply chain, inconsistent quality, and a lack of bargaining power. Our mission is to change that. We are dedicated to empowering these small business owners with the digital tools and transparent access they need to not just survive, but to thrive. By leveling the playing field, we help them secure fair prices, build reliable partnerships, and focus on what they do best: creating the delicious food that defines our streets. Their success is the true measure of ours.",
+    "approach_title": "Our Approach",
     "cards": {
-      "verified": {
-        "title": "Verified Suppliers",
-        "desc": "All suppliers verified through GSTIN and business licenses with ongoing trust monitoring"
+      "transparency": {
+        "title": "Radical Transparency",
+        "desc": "No more guesswork. We provide a clear platform to compare real-time prices from multiple verified suppliers, ensuring you always get a fair deal."
       },
-      "ratings": {
-        "title": "Trust Ratings",
-        "desc": "AI-powered sentiment analysis ensures authentic reviews and maintains supplier quality"
+      "community": {
+        "title": "Community-Powered Growth",
+        "desc": "Strength in numbers. Our group ordering feature allows vendors to band together, unlock bulk-rate discounts, and lower costs for everyone."
       },
-      "support": {
-        "title": "24/7 Support",
-        "desc": "Dedicated support team to help resolve any issues and ensure smooth operations"
+      "trust": {
+        "title": "Unwavering Trust",
+        "desc": "Your business depends on reliability. That's why every supplier on FreshConnect is rigorously verified for quality, licenses, and business integrity."
       }
     }
   },
