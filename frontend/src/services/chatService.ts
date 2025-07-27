@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // The base URL for your chat-related API endpoints
-const API_URL = "https://freshconnect-kuwy.onrender.com/api/conversations";
+const API_URL = "https://freshconnect-kuwy.onrender.com/api/chat";
 
 // --- Reusable Type Definitions ---
 // These types should match the data structures sent by your backend.
