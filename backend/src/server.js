@@ -20,7 +20,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:8080", // IMPORTANT: Make sure this matches your frontend port. The image showed 8080, but React dev server is usually 3000.
+    origin: "https://fresh-connect-nexus.vercel.app", // IMPORTANT: Make sure this matches your frontend port. The image showed 8080, but React dev server is usually 3000.
     methods: ["GET", "POST"],
   },
 });
