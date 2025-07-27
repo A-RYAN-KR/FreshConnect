@@ -1,11 +1,7 @@
-<<<<<<< Updated upstream
 // src/components/VendorDashboard.tsx
 
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-=======
-import { useState, useEffect } from 'react';
->>>>>>> Stashed changes
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,11 +18,12 @@ import {
 import { getAllSuppliers } from "@/services/supplierService";
 import { Supplier, SupplierCard } from "./vendor/SupplierCard";
 import { OrderDialog } from "./vendor/OrderDialog";
-<<<<<<< Updated upstream
-import { MyOrdersTab } from "./vendor/MyOrdersTab";
 import { getAllProducts } from "@/services/productService"; // Import product service
 import { ProductCard } from "./vendor/ProductCard"; // Import ProductCard component
-// --- Add this Product interface near the top ---
+import { MyOrdersTab } from './vendor/MyOrdersTab';
+import { ChatWindow } from './chat/ChatWindow';
+
+// --- Interfaces ---
 interface SupplierInfo {
   _id: string;
   firstName: string;
@@ -44,76 +41,32 @@ interface Product {
   supplierId?: SupplierInfo;
 }
 
-=======
-import { MyOrdersTab } from './vendor/MyOrdersTab';
-// UPDATE: Import the new ChatWindow component
-import { ChatWindow } from './chat/ChatWindow';
->>>>>>> Stashed changes
-
 interface VendorDashboardProps {
   onBack: () => void;
 }
 
-<<<<<<< Updated upstream
-
-const groupOrders = [
-  {
-    id: 1,
-    product: "Premium Basmati Rice",
-    organizer: "Ravi's Food Cart",
-    currentMembers: 8,
-    maxMembers: 12,
-    pricePerKg: "₹65",
-    normalPrice: "₹80",
-    savings: "₹15/kg",
-    deadline: "2 hours left",
-    progress: 67,
-  },
-  {
-    id: 2,
-    product: "Fresh Tomatoes",
-    organizer: "Street Food Junction",
-    currentMembers: 15,
-    maxMembers: 20,
-    pricePerKg: "₹25",
-    normalPrice: "₹32",
-    savings: "₹7/kg",
-    deadline: "45 minutes left",
-    progress: 75,
-  },
-];
-
-
 const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
   const { t } = useTranslation();
 
-=======
-export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
-  // --- State Management ---
->>>>>>> Stashed changes
+  // --- Supplier State ---
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-<<<<<<< Updated upstream
-=======
-  // State for the order dialog
->>>>>>> Stashed changes
+  // --- Order Dialog State ---
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
   const [supplierToOrderFrom, setSupplierToOrderFrom] =
     useState<Supplier | null>(null);
 
-
   // --- Product State ---
-  const [products, setProducts] = useState<unknown[]>([]); // Replace 'any[]' with your Product type
+  const [products, setProducts] = useState<Product[]>([]);
   const [productLoading, setProductLoading] = useState(true);
   const [productError, setProductError] = useState<string | null>(null);
 
-  // UPDATE: New state to manage the active chat session
+  // --- Chat State ---
   const [activeChat, setActiveChat] = useState<{ id: string; name: string } | null>(null);
 
   // --- Data Fetching ---
-
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
@@ -128,9 +81,7 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
       }
     };
     fetchSuppliers();
-  }, []);
-<<<<<<< Updated upstream
-
+  }, [t]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -145,11 +96,8 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
         setProductLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
-=======
->>>>>>> Stashed changes
 
   // --- Event Handlers ---
   const handleOrderNowClick = (supplier: Supplier) => {
@@ -157,31 +105,21 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
     setIsOrderDialogOpen(true);
   };
 
-<<<<<<< Updated upstream
   const handleOrderPlaced = (order: unknown) => {
-    console.log("Order placed successfully!", order);
-=======
-  const handleOrderPlaced = () => {
     // Logic after an order is placed, like showing a toast.
-    console.log("Order placed successfully!");
+    console.log("Order placed successfully!", order);
   };
 
-  // UPDATE: New handlers for opening and closing the chat window
   const handleStartChat = (supplier: Supplier) => {
     setActiveChat({ id: supplier._id, name: supplier.name });
   };
 
   const handleCloseChat = () => {
     setActiveChat(null);
->>>>>>> Stashed changes
   };
 
   return (
     <>
-<<<<<<< Updated upstream
-=======
-      {/* The Order Dialog remains the same */}
->>>>>>> Stashed changes
       <OrderDialog
         supplier={supplierToOrderFrom}
         isOpen={isOrderDialogOpen}
@@ -189,7 +127,7 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
         onOrderPlaced={handleOrderPlaced}
       />
 
-      {/* UPDATE: Conditionally render the floating ChatWindow */}
+      {/* Conditionally render the floating ChatWindow */}
       {activeChat && (
         <ChatWindow
           recipientId={activeChat.id}
@@ -200,7 +138,6 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
       <div className="min-h-screen bg-background">
         <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-          {/* Header content... */}
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -231,7 +168,7 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
         <div className="container mx-auto px-4 py-6">
           <div className="grid lg:grid-cols-4 gap-6">
-<<<<<<< Updated upstream
+            {/* Sidebar */}
             <div className="lg:col-span-1 space-y-6">
               <Card>
                 <CardHeader>
@@ -266,15 +203,11 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                     {t("vendor_dashboard.filters")}
                   </CardTitle>
                 </CardHeader>
-                <CardContent></CardContent>
+                <CardContent>{/* Filter content can go here */}</CardContent>
               </Card>
-=======
-            {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-6">
-              {/* Sidebar Cards... */}
->>>>>>> Stashed changes
             </div>
 
+            {/* Main Content */}
             <div className="lg:col-span-3">
               <div className="space-y-6">
                 <Card>
@@ -297,9 +230,8 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
                 <Tabs defaultValue="suppliers" className="w-full">
                   <TabsList className="grid w-full grid-cols-3">
-
                     <TabsTrigger value="suppliers">Browse Suppliers</TabsTrigger>
-                    <TabsTrigger value="products">Browse Products</TabsTrigger> {/* Changed "groups" to "products" */}
+                    <TabsTrigger value="products">Browse Products</TabsTrigger>
                     <TabsTrigger value="orders">My Orders</TabsTrigger>
                   </TabsList>
 
@@ -323,7 +255,6 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                               key={supplier._id}
                               supplier={supplier}
                               onOrderNow={handleOrderNowClick}
-                              // UPDATE: Pass the chat handler to each card
                               onChatClick={() => handleStartChat(supplier)}
                             />
                           ))
@@ -339,30 +270,27 @@ export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                   </TabsContent>
 
                   <TabsContent value="products" className="space-y-4">
-                {/* Product Listing */}
-                <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-semibold">Available Products</h2>
-                </div>
-                {productLoading && <p>Loading products...</p>}
-                {productError && <p className="text-destructive">{productError}</p>}
-                {!productLoading && !productError && (
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {products.length > 0 ? (
-                      products.map((product: Product) => (
-                        <ProductCard key={product._id} product={product} />
-                      ))
-                    ) : (
-                      <Card>
-                        <CardContent className="p-6 text-center text-muted-foreground">
-                          No products found.
-                        </CardContent>
-                      </Card>
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-xl font-semibold">Available Products</h2>
+                    </div>
+                    {productLoading && <p>Loading products...</p>}
+                    {productError && <p className="text-destructive">{productError}</p>}
+                    {!productLoading && !productError && (
+                      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {products.length > 0 ? (
+                          products.map((product) => (
+                            <ProductCard key={product._id} product={product} />
+                          ))
+                        ) : (
+                          <Card>
+                            <CardContent className="p-6 text-center text-muted-foreground">
+                              No products found.
+                            </CardContent>
+                          </Card>
+                        )}
+                      </div>
                     )}
-                  </div>
-                )}
-              </TabsContent>
-
-
+                  </TabsContent>
 
                   <TabsContent value="orders" className="space-y-4">
                     <MyOrdersTab />
