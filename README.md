@@ -205,5 +205,5 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ---
 
 ## Contact
-
-Project Link: [![repo link](https://github.com/A-RYAN-KR/FreshConnect.git)
+LinkedIn : [**LinkedIn**](https://www.linkedin.com/posts/baladitya-khantwal-16204b291_mernstack-webdevelopment-reactjs-activity-7355302873464791041-q6R5?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEap3xoBTvhOeA7wA2PtCLPTNfgWNLGqiMg)
+Project Link: [**repo link**](https://github.com/A-RYAN-KR/FreshConnect.git)
