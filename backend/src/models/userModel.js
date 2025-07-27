@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const AddressSchema = new mongoose.Schema({
   city: { type: String, trim: true },
@@ -13,18 +13,33 @@ const AddressSchema = new mongoose.Schema({
 
 const UserSchema = new mongoose.Schema(
   {
-    firstName: { type: String, required: [true, 'First name is required'], trim: true },
-    lastName: { type: String, required: [true, 'Last name is required'], trim: true },
+    firstName: {
+      type: String,
+      required: [true, "First name is required"],
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      required: [true, "Last name is required"],
+      trim: true,
+    },
     email: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, "Email is required"],
       unique: true,
       lowercase: true,
       trim: true,
     },
-    password: { type: String, required: [true, 'Password is required'], minlength: 8, select: false },
-    userType: { type: String, enum: ['vendor', 'supplier'], required: true },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: 8,
+      select: false,
+    },
+    userType: { type: String, enum: ["vendor", "supplier"], required: true },
     address: AddressSchema,
+    trustScore: { type: Number, default: 0 },
+
     averageRating: {
       type: Number,
       default: 0,
@@ -32,12 +47,25 @@ const UserSchema = new mongoose.Schema(
       max: 5,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
+// FIX 2: Define the virtual 'name' property
+UserSchema.virtual('name').get(function() {
+    // 'this' refers to the document instance
+    if (this.firstName && this.lastName) {
+        return `${this.firstName} ${this.lastName}`;
+    }
+    return this.firstName || this.lastName || '';
+});
+
 // Hash password before saving
-UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     return next();
   }
   const salt = await bcrypt.genSalt(10);
@@ -50,4 +78,4 @@ UserSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

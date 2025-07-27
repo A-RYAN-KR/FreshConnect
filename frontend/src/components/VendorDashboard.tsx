@@ -7,13 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import {
   Search,
   ShoppingCart,
-  Users,
-  Package,
-  Clock,
   Filter,
   ArrowLeft,
   BarChart3,
@@ -22,11 +18,12 @@ import {
 import { getAllSuppliers } from "@/services/supplierService";
 import { Supplier, SupplierCard } from "./vendor/SupplierCard";
 import { OrderDialog } from "./vendor/OrderDialog";
-
-import { MyOrdersTab } from './vendor/MyOrdersTab';
 import { getAllProducts } from "@/services/productService"; // Import product service
 import { ProductCard } from "./vendor/ProductCard"; // Import ProductCard component
-// --- Add this Product interface near the top ---
+import { MyOrdersTab } from './vendor/MyOrdersTab';
+import { ChatWindow } from './chat/ChatWindow';
+
+// --- Interfaces ---
 interface SupplierInfo {
   _id: string;
   firstName: string;
@@ -44,59 +41,32 @@ interface Product {
   supplierId?: SupplierInfo;
 }
 
-
 interface VendorDashboardProps {
   onBack: () => void;
 }
 
-
-const groupOrders = [
-  {
-    id: 1,
-    product: "Premium Basmati Rice",
-    organizer: "Ravi's Food Cart",
-    currentMembers: 8,
-    maxMembers: 12,
-    pricePerKg: "₹65",
-    normalPrice: "₹80",
-    savings: "₹15/kg",
-    deadline: "2 hours left",
-    progress: 67,
-  },
-  {
-    id: 2,
-    product: "Fresh Tomatoes",
-    organizer: "Street Food Junction",
-    currentMembers: 15,
-    maxMembers: 20,
-    pricePerKg: "₹25",
-    normalPrice: "₹32",
-    savings: "₹7/kg",
-    deadline: "45 minutes left",
-    progress: 75,
-  },
-];
-
-
 const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
   const { t } = useTranslation();
 
+  // --- Supplier State ---
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // --- Order Dialog State ---
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
   const [supplierToOrderFrom, setSupplierToOrderFrom] =
     useState<Supplier | null>(null);
 
-
   // --- Product State ---
-  const [products, setProducts] = useState<unknown[]>([]); // Replace 'any[]' with your Product type
+  const [products, setProducts] = useState<Product[]>([]);
   const [productLoading, setProductLoading] = useState(true);
   const [productError, setProductError] = useState<string | null>(null);
 
-  // --- Data Fetching ---
+  // --- Chat State ---
+  const [activeChat, setActiveChat] = useState<{ id: string; name: string } | null>(null);
 
+  // --- Data Fetching ---
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
@@ -111,8 +81,7 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
       }
     };
     fetchSuppliers();
-  }, []);
-
+  }, [t]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -127,7 +96,6 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
         setProductLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -138,7 +106,16 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
   };
 
   const handleOrderPlaced = (order: unknown) => {
+    // Logic after an order is placed, like showing a toast.
     console.log("Order placed successfully!", order);
+  };
+
+  const handleStartChat = (supplier: Supplier) => {
+    setActiveChat({ id: supplier._id, name: supplier.name });
+  };
+
+  const handleCloseChat = () => {
+    setActiveChat(null);
   };
 
   return (
@@ -149,6 +126,15 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
         onOpenChange={setIsOrderDialogOpen}
         onOrderPlaced={handleOrderPlaced}
       />
+
+      {/* Conditionally render the floating ChatWindow */}
+      {activeChat && (
+        <ChatWindow
+          recipientId={activeChat.id}
+          recipientName={activeChat.name}
+          onClose={handleCloseChat}
+        />
+      )}
 
       <div className="min-h-screen bg-background">
         <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
@@ -182,6 +168,7 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
         <div className="container mx-auto px-4 py-6">
           <div className="grid lg:grid-cols-4 gap-6">
+            {/* Sidebar */}
             <div className="lg:col-span-1 space-y-6">
               <Card>
                 <CardHeader>
@@ -216,10 +203,11 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                     {t("vendor_dashboard.filters")}
                   </CardTitle>
                 </CardHeader>
-                <CardContent></CardContent>
+                <CardContent>{/* Filter content can go here */}</CardContent>
               </Card>
             </div>
 
+            {/* Main Content */}
             <div className="lg:col-span-3">
               <div className="space-y-6">
                 <Card>
@@ -242,9 +230,8 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
                 <Tabs defaultValue="suppliers" className="w-full">
                   <TabsList className="grid w-full grid-cols-3">
-
                     <TabsTrigger value="suppliers">Browse Suppliers</TabsTrigger>
-                    <TabsTrigger value="products">Browse Products</TabsTrigger> {/* Changed "groups" to "products" */}
+                    <TabsTrigger value="products">Browse Products</TabsTrigger>
                     <TabsTrigger value="orders">My Orders</TabsTrigger>
                   </TabsList>
 
@@ -268,6 +255,7 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                               key={supplier._id}
                               supplier={supplier}
                               onOrderNow={handleOrderNowClick}
+                              onChatClick={() => handleStartChat(supplier)}
                             />
                           ))
                         ) : (
@@ -282,30 +270,27 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                   </TabsContent>
 
                   <TabsContent value="products" className="space-y-4">
-                {/* Product Listing */}
-                <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-semibold">Available Products</h2>
-                </div>
-                {productLoading && <p>Loading products...</p>}
-                {productError && <p className="text-destructive">{productError}</p>}
-                {!productLoading && !productError && (
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {products.length > 0 ? (
-                      products.map((product: Product) => (
-                        <ProductCard key={product._id} product={product} />
-                      ))
-                    ) : (
-                      <Card>
-                        <CardContent className="p-6 text-center text-muted-foreground">
-                          No products found.
-                        </CardContent>
-                      </Card>
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-xl font-semibold">Available Products</h2>
+                    </div>
+                    {productLoading && <p>Loading products...</p>}
+                    {productError && <p className="text-destructive">{productError}</p>}
+                    {!productLoading && !productError && (
+                      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {products.length > 0 ? (
+                          products.map((product) => (
+                            <ProductCard key={product._id} product={product} />
+                          ))
+                        ) : (
+                          <Card>
+                            <CardContent className="p-6 text-center text-muted-foreground">
+                              No products found.
+                            </CardContent>
+                          </Card>
+                        )}
+                      </div>
                     )}
-                  </div>
-                )}
-              </TabsContent>
-
-
+                  </TabsContent>
 
                   <TabsContent value="orders" className="space-y-4">
                     <MyOrdersTab />

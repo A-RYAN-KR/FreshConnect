@@ -1,5 +1,6 @@
-const Product = require('../models/productModel');
-const User = require('../models/userModel'); // Make sure this path is correct
+const { calculateTrustScore } = require("../utils/trustScore");
+const Product = require("../models/productModel");
+const User = require("../models/userModel");
 
 // A helper object for population options to avoid repetition
 const supplierPopulationOptions = {
@@ -33,10 +34,19 @@ exports.createProduct = async (req, res) => {
 
     await product.save();
 
+    const supplierProductCount = await Product.countDocuments({ supplierId });
+
+    if (supplierProductCount <= 25) {
+      await calculateTrustScore(supplierId);
+    }
+    // Return the full product object, as the frontend expects it
+    res.status(201).json(product); // <-- Send the product directly for simplicity
+
     // To be consistent, populate the new product before sending it back
     const populatedProduct = await product.populate(supplierPopulationOptions);
 
     res.status(201).json({ success: true, product: populatedProduct });
+
   } catch (error) {
     console.error("Error creating product:", error);
     res.status(500).json({
@@ -60,8 +70,12 @@ exports.getAllProducts = async (req, res) => {
     // where 'supplierId' is replaced by the populated supplier document.
     res.status(200).json({ success: true, products });
   } catch (error) {
-    console.error('Error getting products:', error);
-    res.status(500).json({ success: false, message: 'Failed to get products', error: error.message });
+    console.error("Error getting products:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get products",
+      error: error.message,
+    });
   }
 };
 
@@ -73,12 +87,18 @@ exports.getProductById = async (req, res) => {
       .populate(supplierPopulationOptions);
 
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
     res.status(200).json({ success: true, product });
   } catch (error) {
-    console.error('Error getting product:', error);
-    res.status(500).json({ success: false, message: 'Failed to get product', error: error.message });
+    console.error("Error getting product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get product",
+      error: error.message,
+    });
   }
 };
 
@@ -121,6 +141,8 @@ exports.updateProduct = async (req, res) => {
       { new: true, runValidators: true }
     ).populate(supplierPopulationOptions);
 
+    await calculateTrustScore(req.user.id);
+
     res.status(200).json({ success: true, product: updatedProduct });
   } catch (error)
   {
@@ -138,17 +160,29 @@ exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     if (product.supplierId.toString() !== req.user.id.toString()) {
-      return res.status(403).json({ success: false, message: 'You are not authorized to delete this product' });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this product",
+      });
     }
 
     await Product.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: 'Product deleted successfully' });
+    await calculateTrustScore(req.user.id);
+    res
+      .status(200)
+      .json({ success: true, message: "Product deleted successfully" });
   } catch (error) {
-    console.error('Error deleting product:', error);
-    res.status(500).json({ success: false, message: 'Failed to delete product', error: error.message });
+    console.error("Error deleting product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete product",
+      error: error.message,
+    });
   }
 };

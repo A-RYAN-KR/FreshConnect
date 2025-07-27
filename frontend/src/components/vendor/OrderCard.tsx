@@ -1,12 +1,10 @@
-// src/components/vendor/OrderCard.tsx
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Truck, MessageSquare, Star } from "lucide-react";
+// UPDATE: Import the new icon for the complaint button
+import { Truck, MessageSquare, Star, ShieldAlert } from "lucide-react";
 
-// Define the shape of an Order object, matching your backend models
-// We use 'any' for populated fields for flexibility, but you can create specific types.
+// The Order interface remains the same
 export interface Order {
     _id: string;
     supplierId: {
@@ -20,33 +18,51 @@ export interface Order {
     };
     quantity: number;
     totalPrice: number;
-    status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+    status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | string;
     createdAt: string;
 }
 
+// UPDATE: Add onComplaintClick to the component's props
 interface OrderCardProps {
     order: Order;
+    onReviewClick: (productId: string, productName: string) => void;
+    onComplaintClick: (order: Order) => void;
 }
 
 const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+        return "Invalid Date";
+    }
+    return date.toLocaleDateString('en-US', {
         year: 'numeric', month: 'long', day: 'numeric'
     });
 };
 
 const StatusBadge = ({ status }: { status: Order['status'] }) => {
-    const statusStyles = {
+    const formattedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+
+    const statusStyles: { [key: string]: string } = {
         Pending: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
         Processing: "bg-blue-500/10 text-blue-600 border-blue-500/20",
         Shipped: "bg-indigo-500/10 text-indigo-600 border-indigo-500/20",
         Delivered: "bg-green-500/10 text-green-600 border-green-500/20",
         Cancelled: "bg-red-500/10 text-red-600 border-red-500/20",
     };
-    return <Badge className={statusStyles[status]}>{status}</Badge>;
+
+    return <Badge className={statusStyles[formattedStatus] || statusStyles.Pending}>{status}</Badge>;
 };
 
+export const OrderCard = ({ order, onReviewClick, onComplaintClick }: OrderCardProps) => {
+    const handleReview = () => {
+        onReviewClick(order.productId._id, order.productId.name);
+    };
 
-export const OrderCard = ({ order }: OrderCardProps) => {
+    // UPDATE: New handler to pass the full order object up
+    const handleComplaint = () => {
+        onComplaintClick(order);
+    };
+
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -84,11 +100,18 @@ export const OrderCard = ({ order }: OrderCardProps) => {
                         <MessageSquare className="w-4 h-4 mr-2" />
                         Contact Supplier
                     </Button>
-                    {order.status === 'Delivered' && (
-                        <Button variant="vendor" size="sm">
-                            <Star className="w-4 h-4 mr-2" />
-                            Leave a Review
-                        </Button>
+                    {order.status.toLowerCase() === 'delivered' && (
+                        // UPDATE: Use a fragment to group the new buttons
+                        <>
+                            <Button variant="destructive" size="sm" onClick={handleComplaint}>
+                                <ShieldAlert className="w-4 h-4 mr-2" />
+                                File Complaint
+                            </Button>
+                            <Button variant="vendor" size="sm" onClick={handleReview}>
+                                <Star className="w-4 h-4 mr-2" />
+                                Leave a Review
+                            </Button>
+                        </>
                     )}
                 </div>
             </CardContent>

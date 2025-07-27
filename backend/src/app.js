@@ -1,40 +1,49 @@
 const express = require('express');
+const cors = require('cors');
+const fileUpload = require('express-fileupload');
+
+// Import Routes
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const contactRoutes = require('./routes/contactRoutes'); // <-- 1. IMPORT THE NEW ROUTE
-const fileUpload = require('express-fileupload');
-const cors = require('cors');
+const contactRoutes = require('./routes/contactRoutes');
+const complaintRoutes = require("./routes/complaintRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
 
-// Middleware (applied globally)
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// In app.js, before app.use('/api/users', userRoutes);
+// --- Global Middleware ---
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json()); // Parse JSON request bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(fileUpload()); // Middleware for file uploads
 
+// --- Test Route ---
 app.get('/api/test', (req, res) => {
     console.log("✅ /api/test route was hit successfully!");
     res.status(200).json({ message: "Success! The test route is public and working." });
-}); 
-// Mount routes
+});
+
+// --- Mount Routes ---
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/contact', contactRoutes); // <-- 2. MOUNT THE NEW ROUTE
+app.use('/api/contact', contactRoutes);
+app.use("/api/complaints", complaintRoutes);
+app.use("/api/chat", chatRoutes);
 
-// Catch-all route for undefined routes (optional)
+// --- Error Handling ---
+// Catch-all for undefined routes
 app.use((req, res, next) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
+  res.status(404).json({ success: false, message: "Route not found" });
 });
 
-// Error handling middleware (optional)
+// General error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ success: false, message: 'Internal server error' });
+  res.status(500).json({ success: false, message: "Internal Server Error" });
 });
 
 module.exports = app;
