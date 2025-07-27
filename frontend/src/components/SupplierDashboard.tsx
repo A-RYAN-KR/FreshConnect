@@ -5,11 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductInventoryTab } from "./supplier/ProductInventoryTab";
-<<<<<<< Updated upstream
-import { ArrowLeft, TrendingUp, Package, Star, BarChart3 } from "lucide-react";
-import { SupplierOrdersTab } from "./supplier/SupplierOrdersTab";
 import { useTranslation } from "react-i18next";
-=======
 import {
   ArrowLeft,
   Plus,
@@ -21,7 +17,6 @@ import {
 } from "lucide-react";
 import { SupplierOrdersTab } from "./supplier/SupplierOrdersTab";
 import { Link } from "react-router-dom";
->>>>>>> Stashed changes
 
 interface SupplierDashboardProps {
   onBack: () => void;
