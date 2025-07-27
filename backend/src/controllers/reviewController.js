@@ -5,25 +5,14 @@ const Product = require("../models/productModel");
 exports.createReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
-
-    // FIX 1: Access the correct route parameter name
     const productId = req.params.productId;
-
-    const vendorId = req.user.id; // Assuming `protect` middleware attaches user to req.user
-
-    // FIX 2: Correctly handle multiple image uploads from req.files
-    // The `upload.array` middleware puts uploaded file info into `req.files`.
-    // We map over this array to get the path (or URL from Cloudinary) of each file.
+    const vendorId = req.user.id;
     const reviewImages = req.files ? req.files.map((file) => file.path) : [];
 
-    // Check if productId was found
     if (!productId) {
       return res
         .status(400)
-        .json({
-          success: false,
-          message: "Product ID is missing from the request URL.",
-        });
+        .json({ success: false, message: "Product ID is missing." });
     }
 
     const product = await Product.findById(productId);
@@ -33,30 +22,31 @@ exports.createReview = async (req, res) => {
         .json({ success: false, message: "Product not found" });
     }
 
-    console.log("productId:", productId); // Add this line for debugging
-
+    // This is the product's supplier ID we need to save!
+    const supplierId = product.supplierId;
 
     const review = new Review({
       productId,
       vendorId,
+      supplierId,
       rating,
       comment,
-      reviewImages: [req.cloudinaryUrl], // Assuming you're using uploadMiddleware here too
+      reviewImages,
     });
 
     await review.save();
 
-    await calculateTrustScore(product.supplierId);
+    // Now this call will work because the review is linked to the supplier
+    await calculateTrustScore(supplierId);
 
     res.status(201).json({ success: true, review });
   } catch (error) {
+    console.error("Error creating review:", error);
     res.status(500).json({
       success: false,
       message: "Failed to create review",
       error: error.message,
     });
-    console.error('Error creating review:', error);
-    res.status(500).json({ success: false, message: 'Failed to create review', error: error.message });
   }
 };
 

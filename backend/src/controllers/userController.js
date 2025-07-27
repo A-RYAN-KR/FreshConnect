@@ -92,7 +92,6 @@ exports.getMe = async (req, res, next) => {
 // @route   GET /api/users/suppliers
 exports.getAllSuppliers = async (req, res, next) => {
   try {
-    // We use an aggregation pipeline to efficiently fetch suppliers and their associated products.
     const suppliers = await User.aggregate([
       // Stage 1: Filter to get only users who are suppliers
       {
@@ -101,45 +100,34 @@ exports.getAllSuppliers = async (req, res, next) => {
       // Stage 2: Perform a "left join" to the 'products' collection
       {
         $lookup: {
-          from: "products", // The name of the products collection in MongoDB
-          localField: "_id", // The field from the User collection
-          foreignField: "supplierId", // The field from the Product collection
-          as: "products", // The name of the new array field to add to each supplier
+          from: "products", // The name of the products collection
+          localField: "_id", // Field from the User collection
+          foreignField: "supplierId", // Field from the Product collection
+          as: "products", // The new array field name
         },
       },
-      // Stage 3: (Optional but recommended) Add mock/calculated fields to match the frontend UI
+
+      // Stage 4: Reshape the output and include the REAL fields
       {
-        $addFields: {
-          // These are examples. You would calculate these based on real data (e.g., reviews, location).
-          trustScore: {
-            $floor: { $add: [90, { $multiply: [10, { $rand: {} }] }] },
-          }, // Random trust score 90-99
-          rating: {
-            $round: [{ $add: [4.5, { $multiply: [0.5, { $rand: {} }] }] }, 1],
-          }, // Random rating 4.5-5.0
-          reviewCount: {
-            $floor: { $add: [50, { $multiply: [150, { $rand: {} }] }] },
-          }, // Random reviews 50-200
+        $project: {
+          // --- User Details ---
+          _id: 1,
+          name: { $concat: ["$firstName", " ", "$lastName"] },
+          email: 1,
+          address: 1,
+
+          // --- Real Calculated Data ---
+          trustScore: 1, // This will now be the real score from the document (e.g., 13)
+          rating: "$averageRating", // Use the 'averageRating' field from the user model
+
+          // --- Associated Data ---
+          products: 1, // Include the array of products
+          reviewCount: { $size: "$products" }, // A simple example: count the number of products
+
+          // --- Mock/Static Data (you can keep these if needed) ---
           distance: "2.5 km",
           deliveryTime: "2-4 hours",
           minOrder: 500,
-        },
-      },
-      // Stage 4: Reshape the output to remove sensitive data like passwords
-      {
-        $project: {
-          _id: 1,
-          name: { $concat: ["$firstName", " ", "$lastName"] }, // Combine first and last name
-          email: 1,
-          address: 1,
-          products: 1, // Include the array of products
-          // Include the new fields
-          trustScore: 1,
-          rating: 1,
-          reviewCount: 1,
-          distance: 1,
-          deliveryTime: 1,
-          minOrder: 1,
         },
       },
     ]);

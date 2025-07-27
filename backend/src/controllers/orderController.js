@@ -106,13 +106,29 @@ exports.updateOrderStatus = async (req, res) => {
       });
     }
 
+    // --- MODIFIED LOGIC ---
+
+    // 1. Update the status
     order.status = status;
+
+    // 2. If the status is 'delivered', set the deliveredAt timestamp to now.
+    //    This check ensures it only happens once when the status is first set.
+    if (status === "delivered" && !order.deliveredAt) {
+      order.deliveredAt = new Date();
+    }
+
+    // 3. Save the changes to the database
     await order.save();
 
+    // 4. If the status was set to 'delivered', recalculate the trust score.
+    //    This is placed after .save() to ensure the calculation uses the latest data.
     if (status === "delivered") {
       await calculateTrustScore(order.supplierId);
     }
 
+    // --- END OF MODIFIED LOGIC ---
+
+    // Populate the order with details before sending it back
     const populatedOrder = await Order.findById(order._id)
       .populate("vendorId", "firstName lastName email")
       .populate("productId", "name images");

@@ -7,10 +7,11 @@ const calculateTrustScore = async (userId) => {
   const user = await User.findById(userId);
   if (!user || user.userType !== "supplier") return 0;
 
+  // Use 'supplierId' consistently for all queries
   const [products, orders, reviews] = await Promise.all([
-    Product.find({ supplier: userId }),
-    Order.find({ supplier: userId, status: "delivered" }),
-    Review.find({ supplier: userId }),
+    Product.find({ supplierId: userId }), // Use supplierId
+    Order.find({ supplierId: userId, status: "delivered" }), // Use supplierId
+    Review.find({ supplierId: userId }), // Use supplierId
   ]);
 
   let score = 0;
@@ -60,6 +61,10 @@ const calculateTrustScore = async (userId) => {
 
   user.trustScore = Math.round(score);
   await user.save();
+
+  console.log(
+    `Trust Score for ${user.name} (${user._id}): ${user.trustScore}`
+  );
 
   return user.trustScore;
 };
