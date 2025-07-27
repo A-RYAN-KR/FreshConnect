@@ -5,9 +5,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductInventoryTab } from "./supplier/ProductInventoryTab";
+<<<<<<< Updated upstream
 import { ArrowLeft, TrendingUp, Package, Star, BarChart3 } from "lucide-react";
 import { SupplierOrdersTab } from "./supplier/SupplierOrdersTab";
 import { useTranslation } from "react-i18next";
+=======
+import {
+  ArrowLeft,
+  Plus,
+  Package,
+  TrendingUp,
+  Star,
+  BarChart3,
+  MessageSquare
+} from "lucide-react";
+import { SupplierOrdersTab } from "./supplier/SupplierOrdersTab";
+import { Link } from "react-router-dom";
+>>>>>>> Stashed changes
 
 interface SupplierDashboardProps {
   onBack: () => void;
@@ -139,6 +153,12 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
           </TabsContent>
         </Tabs>
       </div>
+      {/* UPDATE: Add Floating Chat Icon */}
+      <Link to="/supplier/chat">
+        <Button size="icon" className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50">
+          <MessageSquare className="h-7 w-7" />
+        </Button>
+      </Link>
     </div>
   );
 };

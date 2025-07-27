@@ -1,19 +1,19 @@
+<<<<<<< Updated upstream
 // src/components/VendorDashboard.tsx
 
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+=======
+import { useState, useEffect } from 'react';
+>>>>>>> Stashed changes
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import {
   Search,
   ShoppingCart,
-  Users,
-  Package,
-  Clock,
   Filter,
   ArrowLeft,
   BarChart3,
@@ -22,6 +22,7 @@ import {
 import { getAllSuppliers } from "@/services/supplierService";
 import { Supplier, SupplierCard } from "./vendor/SupplierCard";
 import { OrderDialog } from "./vendor/OrderDialog";
+<<<<<<< Updated upstream
 import { MyOrdersTab } from "./vendor/MyOrdersTab";
 import { getAllProducts } from "@/services/productService"; // Import product service
 import { ProductCard } from "./vendor/ProductCard"; // Import ProductCard component
@@ -43,11 +44,17 @@ interface Product {
   supplierId?: SupplierInfo;
 }
 
+=======
+import { MyOrdersTab } from './vendor/MyOrdersTab';
+// UPDATE: Import the new ChatWindow component
+import { ChatWindow } from './chat/ChatWindow';
+>>>>>>> Stashed changes
 
 interface VendorDashboardProps {
   onBack: () => void;
 }
 
+<<<<<<< Updated upstream
 
 const groupOrders = [
   {
@@ -80,10 +87,18 @@ const groupOrders = [
 const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
   const { t } = useTranslation();
 
+=======
+export const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
+  // --- State Management ---
+>>>>>>> Stashed changes
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+<<<<<<< Updated upstream
+=======
+  // State for the order dialog
+>>>>>>> Stashed changes
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
   const [supplierToOrderFrom, setSupplierToOrderFrom] =
     useState<Supplier | null>(null);
@@ -93,6 +108,9 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
   const [products, setProducts] = useState<unknown[]>([]); // Replace 'any[]' with your Product type
   const [productLoading, setProductLoading] = useState(true);
   const [productError, setProductError] = useState<string | null>(null);
+
+  // UPDATE: New state to manage the active chat session
+  const [activeChat, setActiveChat] = useState<{ id: string; name: string } | null>(null);
 
   // --- Data Fetching ---
 
@@ -111,6 +129,7 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
     };
     fetchSuppliers();
   }, []);
+<<<<<<< Updated upstream
 
 
   useEffect(() => {
@@ -129,6 +148,8 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
     fetchProducts();
   }, []);
+=======
+>>>>>>> Stashed changes
 
   // --- Event Handlers ---
   const handleOrderNowClick = (supplier: Supplier) => {
@@ -136,12 +157,31 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
     setIsOrderDialogOpen(true);
   };
 
+<<<<<<< Updated upstream
   const handleOrderPlaced = (order: unknown) => {
     console.log("Order placed successfully!", order);
+=======
+  const handleOrderPlaced = () => {
+    // Logic after an order is placed, like showing a toast.
+    console.log("Order placed successfully!");
+  };
+
+  // UPDATE: New handlers for opening and closing the chat window
+  const handleStartChat = (supplier: Supplier) => {
+    setActiveChat({ id: supplier._id, name: supplier.name });
+  };
+
+  const handleCloseChat = () => {
+    setActiveChat(null);
+>>>>>>> Stashed changes
   };
 
   return (
     <>
+<<<<<<< Updated upstream
+=======
+      {/* The Order Dialog remains the same */}
+>>>>>>> Stashed changes
       <OrderDialog
         supplier={supplierToOrderFrom}
         isOpen={isOrderDialogOpen}
@@ -149,8 +189,18 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
         onOrderPlaced={handleOrderPlaced}
       />
 
+      {/* UPDATE: Conditionally render the floating ChatWindow */}
+      {activeChat && (
+        <ChatWindow
+          recipientId={activeChat.id}
+          recipientName={activeChat.name}
+          onClose={handleCloseChat}
+        />
+      )}
+
       <div className="min-h-screen bg-background">
         <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+          {/* Header content... */}
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -181,6 +231,7 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
 
         <div className="container mx-auto px-4 py-6">
           <div className="grid lg:grid-cols-4 gap-6">
+<<<<<<< Updated upstream
             <div className="lg:col-span-1 space-y-6">
               <Card>
                 <CardHeader>
@@ -217,6 +268,11 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                 </CardHeader>
                 <CardContent></CardContent>
               </Card>
+=======
+            {/* Sidebar */}
+            <div className="lg:col-span-1 space-y-6">
+              {/* Sidebar Cards... */}
+>>>>>>> Stashed changes
             </div>
 
             <div className="lg:col-span-3">
@@ -267,6 +323,8 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                               key={supplier._id}
                               supplier={supplier}
                               onOrderNow={handleOrderNowClick}
+                              // UPDATE: Pass the chat handler to each card
+                              onChatClick={() => handleStartChat(supplier)}
                             />
                           ))
                         ) : (
