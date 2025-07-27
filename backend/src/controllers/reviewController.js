@@ -15,6 +15,9 @@ exports.createReview = async (req, res) => {
         .json({ success: false, message: "Product not found" });
     }
 
+    console.log("productId:", productId); // Add this line for debugging
+
+
     const review = new Review({
       productId,
       vendorId,
@@ -34,6 +37,8 @@ exports.createReview = async (req, res) => {
       message: "Failed to create review",
       error: error.message,
     });
+    console.error('Error creating review:', error);
+    res.status(500).json({ success: false, message: 'Failed to create review', error: error.message });
   }
 };
 
@@ -48,5 +53,6 @@ exports.getReviewsByProduct = async (req, res) => {
       message: "Failed to get reviews",
       error: error.message,
     });
+
   }
 };

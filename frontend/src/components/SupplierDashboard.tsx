@@ -4,23 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProductInventoryTab } from "./supplier/ProductInventoryTab"; // <-- Import the new component
-import {
-  ArrowLeft,
-  Plus,
-  Package,
-  TrendingUp,
-  Star,
-  BarChart3,
-} from "lucide-react";
+import { ProductInventoryTab } from "./supplier/ProductInventoryTab";
+import { ArrowLeft, TrendingUp, Package, Star, BarChart3 } from "lucide-react";
 import { SupplierOrdersTab } from "./supplier/SupplierOrdersTab";
+import { useTranslation } from "react-i18next";
 
 interface SupplierDashboardProps {
   onBack: () => void;
 }
 
 const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
-  // All product-related state and logic has been moved out!
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-background">
@@ -34,46 +28,100 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
               </Button>
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
-                <h1 className="text-xl font-bold text-foreground">Supplier Dashboard</h1>
+                <h1 className="text-xl font-bold text-foreground">
+                  {t("supplier_dashboard.title")}
+                </h1>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant="outline" className="bg-secondary/10 text-secondary border-secondary/20">
-                Trust Score: 94%
+              <Badge
+                variant="outline"
+                className="bg-secondary/10 text-secondary border-secondary/20"
+              >
+                {t("supplier_dashboard.trustScore")}: 94%
               </Badge>
-              {/* The "Add Product" button is now inside the ProductInventoryTab */}
             </div>
           </div>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-6">
-        {/* Stats Overview (Can also be refactored into its own component) */}
+        {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Revenue</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("supplier_dashboard.stats.totalRevenue")}
+                  </p>
                   <p className="text-2xl font-bold text-primary">₹45,280</p>
                 </div>
                 <TrendingUp className="w-8 h-8 text-primary" />
               </div>
             </CardContent>
           </Card>
-          {/* ... other stat cards ... */}
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {t("supplier_dashboard.stats.activeOrders")}
+                  </p>
+                  <p className="text-2xl font-bold">23</p>
+                </div>
+                <Package className="w-8 h-8 text-secondary" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {t("supplier_dashboard.stats.productsListed")}
+                  </p>
+                  <p className="text-2xl font-bold">12</p>
+                </div>
+                <BarChart3 className="w-8 h-8 text-trust" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    {t("supplier_dashboard.stats.avgRating")}
+                  </p>
+                  <p className="text-2xl font-bold">4.8</p>
+                </div>
+                <Star className="w-8 h-8 text-primary fill-primary" />
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Main Content */}
         <Tabs defaultValue="products" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="products">My Products</TabsTrigger>
-            <TabsTrigger value="orders">Orders</TabsTrigger>
-            <TabsTrigger value="bids">Group Order Bids</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="products">
+              {t("supplier_dashboard.tabs.products")}
+            </TabsTrigger>
+            <TabsTrigger value="orders">
+              {t("supplier_dashboard.tabs.orders")}
+            </TabsTrigger>
+            <TabsTrigger value="bids">
+              {t("supplier_dashboard.tabs.bids")}
+            </TabsTrigger>
+            <TabsTrigger value="analytics">
+              {t("supplier_dashboard.tabs.analytics")}
+            </TabsTrigger>
           </TabsList>
 
-          {/* This is now super clean! */}
           <TabsContent value="products">
             <ProductInventoryTab />
           </TabsContent>
@@ -83,11 +131,11 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
           </TabsContent>
 
           <TabsContent value="bids" className="text-center p-8">
-            <p>Bids section coming soon.</p>
+            <p>{t("supplier_dashboard.tabs.bidsComing")}</p>
           </TabsContent>
 
           <TabsContent value="analytics" className="text-center p-8">
-            <p>Analytics section coming soon.</p>
+            <p>{t("supplier_dashboard.tabs.analyticsComing")}</p>
           </TabsContent>
         </Tabs>
       </div>
