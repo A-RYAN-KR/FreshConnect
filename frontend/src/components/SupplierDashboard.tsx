@@ -6,8 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductInventoryTab } from "./supplier/ProductInventoryTab";
 import { SupplierOrdersTab } from "./supplier/SupplierOrdersTab";
-import { ArrowLeft, TrendingUp, Package, Star, BarChart3, AlertCircle } from "lucide-react";
+import { ArrowLeft, TrendingUp, Package, Star, BarChart3, AlertCircle, MessageSquare } from "lucide-react";
 import { getSupplierDashboardStats, SupplierStats } from "@/services/supplierServices";
+import { Link } from "react-router-dom";
 
 interface SupplierDashboardProps {
   onBack: () => void;
