@@ -39,3 +39,38 @@ export const submitReview = async (
     };
   }
 };
+
+export const fetchProductReviewCount = async (productId: string): Promise<number> => {
+  try {
+    const response = await axios.get(`${API_URL}/${productId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const reviews = response.data.reviews || response.data || [];
+    return reviews.length;
+  } catch (error: any) {
+    console.error("Error fetching review count:", error?.response?.data?.message || error.message);
+    return 0;
+  }
+};
+
+export const fetchProductReviews = async (productId: string): Promise<any> => {
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/reviews/${productId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data.reviews || response.data || [];
+  } catch (error: any) {
+    console.error(
+      "Error fetching reviews:",
+      error?.response?.data?.message || error.message
+    );
+    return [];
+  }
+};

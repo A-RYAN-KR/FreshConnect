@@ -270,7 +270,7 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                     {productLoading && <p>Loading products...</p>}
                     {productError && <p className="text-destructive">{productError}</p>}
                     {!productLoading && !productError && (
-                      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
                         {products.length > 0 ? (
                           products.map((product) => (
                             <ProductCard key={product._id} product={product} />
