@@ -7,13 +7,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Star, Shield, Users, TrendingUp, CheckCircle, PhoneCall, Globe, ChefHat } from "lucide-react";
+import { Star, Shield, Users, TrendingUp, CheckCircle, PhoneCall, Globe, ChefHat, LogOut } from "lucide-react";
 import heroImage from "@/assets/hero-marketplace.jpg";
 import vendorIcon from "@/assets/vendor-icon.jpg";
 import supplierIcon from "@/assets/supplier-icon.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../context/AuthContext" // Assuming your hook is at this path
+import { toast } from "sonner";
 
+// Helper component to enable smooth scrolling for anchor links
 const SmoothScrollStyle = () => (
   <style>{`
     html {
@@ -24,9 +27,33 @@ const SmoothScrollStyle = () => (
 
 const LandingPage = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
 
-  const changeLanguage = (lng) => {
+  const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+  };
+
+  /**
+   * Handles clicks on role-specific buttons (Vendor/Supplier).
+   * - If not authenticated, redirects to the login page with the role pre-selected.
+   * - If authenticated with the correct role, redirects to their dashboard.
+   * - If authenticated with the wrong role, shows an error toast.
+   * @param targetRole The role the user is trying to access ('vendor' or 'supplier').
+   */
+  const handleRoleButtonClick = (targetRole: 'vendor' | 'supplier') => {
+    if (!isAuthenticated) {
+      navigate('/auth/login', { state: { userType: targetRole } });
+      return;
+    }
+
+    if (user?.userType === targetRole) {
+      navigate(`/${targetRole}/dashboard`);
+    } else {
+      toast.error(`You are already logged in as a ${user?.userType}.`, {
+        description: `Please log out to access the ${targetRole} portal.`,
+      });
+    }
   };
 
   return (
@@ -58,7 +85,21 @@ const LandingPage = () => {
             </DropdownMenu>
             <Button asChild variant="ghost"><a href="#about">{t('buttons.about')}</a></Button>
             <Button asChild variant="ghost"><a href="#contact">{t('buttons.contact')}</a></Button>
-            <Button asChild variant="outline"><Link to="/auth/login">{t('buttons.login')}</Link></Button>
+
+            {/* DYNAMIC LOGIN/LOGOUT BUTTON */}
+            {isAuthenticated ? (
+              <Button variant="outline" onClick={() => {
+                logout();
+                toast.success("You have been logged out.");
+              }}>
+                <LogOut className="w-4 h-4 mr-2" />
+                {t('buttons.logout')}
+              </Button>
+            ) : (
+              <Button asChild variant="outline">
+                <Link to="/auth/login">{t('buttons.login')}</Link>
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -78,18 +119,22 @@ const LandingPage = () => {
                 <p className="text-xl text-muted-foreground leading-relaxed">{t('hero.subtitle')}</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/auth/login" state={{ userType: 'vendor' }} className="flex-1">
-                  <Button size="hero" className="w-full text-primary-foreground shadow-lg hover:shadow-glow hover:brightness-110 transition-all duration-300 transform hover:-translate-y-1">
-                    <Users className="w-5 h-5 mr-2" />
-                    {t('buttons.vendor')}
-                  </Button>
-                </Link>
-                <Link to="/auth/login" state={{ userType: 'supplier' }} className="flex-1">
-                  <Button size="hero" className="bg-green-500 w-full text-secondary-foreground shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-green-400">
-                    <TrendingUp className="w-5 h-5 mr-2" />
-                    {t('buttons.supplier')}
-                  </Button>
-                </Link>
+                <Button
+                  size="hero"
+                  className="w-full text-primary-foreground shadow-lg hover:shadow-glow hover:brightness-110 transition-all duration-300 transform hover:-translate-y-1"
+                  onClick={() => handleRoleButtonClick('vendor')}
+                >
+                  <Users className="w-5 h-5 mr-2" />
+                  {t('buttons.vendor')}
+                </Button>
+                <Button
+                  size="hero"
+                  className="bg-green-500 w-full text-secondary-foreground shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-green-400"
+                  onClick={() => handleRoleButtonClick('supplier')}
+                >
+                  <TrendingUp className="w-5 h-5 mr-2" />
+                  {t('buttons.supplier')}
+                </Button>
               </div>
 
               <div className="grid grid-cols-3 gap-6 pt-8">
@@ -100,7 +145,7 @@ const LandingPage = () => {
             </div>
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl blur-3xl"></div>
-              <img src={heroImage} alt={t('hero.badge')} className="relative rounded-2xl shadow-2xl w-full h-auto"/>
+              <img src={heroImage} alt={t('hero.badge')} className="relative rounded-2xl shadow-2xl w-full h-auto" />
             </div>
           </div>
         </div>
@@ -114,44 +159,46 @@ const LandingPage = () => {
             <p className="text-xl text-muted-foreground">{t('choose_role.subtitle')}</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Link to="/auth/login" state={{ userType: 'vendor' }}>
-              <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
-                <CardHeader className="text-center pb-6">
-                  <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-primary/20"><img src={vendorIcon} alt={t('vendor_card.title')} className="w-full h-full object-cover" /></div>
-                  <CardTitle className="text-2xl text-primary">{t('vendor_card.title')}</CardTitle>
-                  <CardDescription className="text-base">{t('vendor_card.desc')}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-primary flex-shrink-0" /><span>{t('vendor_card.features.0')}</span></div>
-                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-primary flex-shrink-0" /><span>{t('vendor_card.features.1')}</span></div>
-                  </div>
-                  <Button variant="vendor" className="w-full mt-6 group-hover:scale-105 transition-transform">{t('vendor_card.cta')}</Button>
-                </CardContent>
-              </Card>
-            </Link>
-            <Link to="/auth/login" state={{ userType: 'supplier' }}>
-              <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-secondary/50">
-                <CardHeader className="text-center pb-6">
-                  <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-secondary/20"><img src={supplierIcon} alt={t('supplier_card.title')} className="w-full h-full object-cover" /></div>
-                  <CardTitle className="text-2xl text-secondary">{t('supplier_card.title')}</CardTitle>
-                  <CardDescription className="text-base">{t('supplier_card.desc')}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" /><span>{t('supplier_card.features.0')}</span></div>
-                    <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" /><span>{t('supplier_card.features.1')}</span></div>
-                  </div>
-                  <Button variant="supplier" className="w-full mt-6 group-hover:scale-105 transition-transform">{t('supplier_card.cta')}</Button>
-                </CardContent>
-              </Card>
-            </Link>
+            <Card
+              className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-primary/50"
+              onClick={() => handleRoleButtonClick('vendor')}
+            >
+              <CardHeader className="text-center pb-6">
+                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-primary/20"><img src={vendorIcon} alt={t('vendor_card.title')} className="w-full h-full object-cover" /></div>
+                <CardTitle className="text-2xl text-primary">{t('vendor_card.title')}</CardTitle>
+                <CardDescription className="text-base">{t('vendor_card.desc')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-primary flex-shrink-0" /><span>{t('vendor_card.features.0')}</span></div>
+                  <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-primary flex-shrink-0" /><span>{t('vendor_card.features.1')}</span></div>
+                </div>
+                <Button variant="vendor" className="w-full mt-6 group-hover:scale-105 transition-transform">{t('vendor_card.cta')}</Button>
+              </CardContent>
+            </Card>
+            <Card
+              className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 cursor-pointer border-2 hover:border-secondary/50"
+              onClick={() => handleRoleButtonClick('supplier')}
+            >
+              <CardHeader className="text-center pb-6">
+                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-secondary/20"><img src={supplierIcon} alt={t('supplier_card.title')} className="w-full h-full object-cover" /></div>
+                <CardTitle className="text-2xl text-secondary">{t('supplier_card.title')}</CardTitle>
+                <CardDescription className="text-base">{t('supplier_card.desc')}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" /><span>{t('supplier_card.features.0')}</span></div>
+                  <div className="flex items-center space-x-3"><CheckCircle className="w-5 h-5 text-secondary flex-shrink-0" /><span>{t('supplier_card.features.1')}</span></div>
+                </div>
+                <Button variant="supplier" className="w-full mt-6 group-hover:scale-105 transition-transform">{t('supplier_card.cta')}</Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* About Us Section */}
-      <section id="about" className="py-20 bg-muted/30">
+      <section id="about" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16 max-w-3xl mx-auto">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">{t('about_section.title')}</h2>
@@ -192,7 +239,7 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Footer */}
       <footer id="contact" className="bg-muted py-12 border-t">
         <div className="container mx-auto px-4">

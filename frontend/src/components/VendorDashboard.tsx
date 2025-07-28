@@ -23,6 +23,7 @@ import { getAllProducts } from "@/services/productService"; // Import product se
 import { ProductCard } from "./vendor/ProductCard"; // Import ProductCard component
 import { MyOrdersTab } from './vendor/MyOrdersTab';
 import { ChatWindow } from './chat/ChatWindow';
+import { Link } from "react-router-dom";
 
 // --- Interfaces ---
 interface SupplierInfo {
@@ -142,8 +143,10 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <Button variant="ghost" size="icon" onClick={onBack}>
-                  <ArrowLeft className="w-5 h-5" />
+                <Button variant="ghost" size="icon" asChild>
+                  <Link to="/">
+                    <ArrowLeft className="w-5 h-5" />
+                  </Link>
                 </Button>
                 <div className="flex items-center space-x-2">
                   <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 rounded-xl shadow-md">

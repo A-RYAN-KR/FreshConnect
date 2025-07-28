@@ -7,8 +7,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductInventoryTab } from "./supplier/ProductInventoryTab";
 import { SupplierOrdersTab } from "./supplier/SupplierOrdersTab";
 import { ArrowLeft, TrendingUp, Package, Star, BarChart3, AlertCircle, MessageSquare, ChefHat } from "lucide-react";
-import { getSupplierDashboardStats, SupplierStats } from "@/services/supplierServices";
+import {
+  getSupplierDashboardData,
+  SupplierStats,
+  SupplierAnalyticsData,
+  SupplierKpis
+} from "@/services/supplierServices";
 import { Link } from "react-router-dom";
+import AnalyticsTab from "./vendor/AnalyticsTab";
 
 interface SupplierDashboardProps {
   onBack: () => void;
@@ -17,18 +23,26 @@ interface SupplierDashboardProps {
 const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
   const { t } = useTranslation();
 
-  // State to hold dashboard data, loading, and error status
+  /// +++ CREATE STATE FOR EACH PIECE OF DATA +++
   const [stats, setStats] = useState<SupplierStats | null>(null);
+  const [analytics, setAnalytics] = useState<SupplierAnalyticsData | null>(null);
+  const [kpis, setKpis] = useState<SupplierKpis | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchAllData = async () => {
       try {
         setIsLoading(true);
-        const data = await getSupplierDashboardStats();
-        setStats(data);
+        // +++ CALL THE NEW UNIFIED SERVICE FUNCTION +++
+        const data = await getSupplierDashboardData();
+
+        // +++ SET ALL THE STATE AT ONCE +++
+        setStats(data.stats);
+        setAnalytics(data.analytics);
+        setKpis(data.kpis);
         setError(null);
+
       } catch (err) {
         setError("Failed to load dashboard data. Please try again later.");
         console.error(err);
@@ -37,8 +51,8 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
       }
     };
 
-    fetchStats();
-  }, []); // Empty dependency array means this runs once on mount
+    fetchAllData();
+  }, []);
 
   // Helper to format currency
   const formatCurrency = (value: number) => {
@@ -120,8 +134,10 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="icon" onClick={onBack}>
-                <ArrowLeft className="w-5 h-5" />
+              <Button variant="ghost" size="icon" asChild>
+                <Link to="/">
+                  <ArrowLeft className="w-5 h-5" />
+                </Link>
               </Button>
               <div className="flex items-center space-x-2">
                 <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 rounded-xl shadow-md">
@@ -156,7 +172,16 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
           <TabsContent value="products"><ProductInventoryTab /></TabsContent>
           <TabsContent value="orders"><SupplierOrdersTab /></TabsContent>
           <TabsContent value="bids" className="text-center p-8"><p>{t("supplier_dashboard.tabs.bidsComing")}</p></TabsContent>
-          <TabsContent value="analytics" className="text-center p-8"><p>{t("supplier_dashboard.tabs.analyticsComing")}</p></TabsContent>
+          <TabsContent value="analytics">
+            {!isLoading && analytics && kpis ? (
+              <AnalyticsTab analytics={analytics} kpis={kpis} />
+            ) : (
+              // Show a loading or error message specific to this tab
+              <div className="text-center p-16">
+                {isLoading ? t("supplier_dashboard.loading_analytics") : "Analytics data could not be loaded."}
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
       </div>
       {/* UPDATE: Add Floating Chat Icon */}
