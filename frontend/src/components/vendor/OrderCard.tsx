@@ -19,7 +19,7 @@ export interface Order {
     quantity: number;
     totalPrice: number;
     status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | string;
-    createdAt: string;
+    orderDate: string;
 }
 
 // UPDATE: Add onComplaintClick to the component's props
@@ -84,7 +84,7 @@ export const OrderCard = ({ order, onReviewClick, onComplaintClick }: OrderCardP
                             Quantity: {order.quantity} kg
                         </p>
                         <p className="text-sm text-muted-foreground">
-                            Order Date: {formatDate(order.createdAt)}
+                            Order Date: {formatDate(order.orderDate)}
                         </p>
                     </div>
                     <div className="text-right">

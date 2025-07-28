@@ -71,7 +71,7 @@ export const SupplierCard = ({ supplier, onOrderNow, onChatClick }: SupplierCard
                             </div>
                             <div>
                                 <span className="text-muted-foreground">Min Order:</span>
-                                <div className="font-medium">₹{supplier.minOrder}</div>
+                                <div className="font-medium">₹{supplier.minOrder}1000</div>
                             </div>
                             <div>
                                 <span className="text-muted-foreground">Savings:</span>
