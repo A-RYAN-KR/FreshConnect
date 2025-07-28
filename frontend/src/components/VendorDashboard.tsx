@@ -13,6 +13,7 @@ import {
   Filter,
   ArrowLeft,
   BarChart3,
+  ChefHat,
 } from "lucide-react";
 
 import { getAllSuppliers } from "@/services/supplierService";
@@ -145,7 +146,9 @@ const VendorDashboard = ({ onBack }: VendorDashboardProps) => {
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
+                  <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 rounded-xl shadow-md">
+                    <ChefHat className="h-6 w-6 text-white" />
+                  </div>
                   <h1 className="text-xl font-bold text-foreground">
                     {t("vendor_dashboard.title")}
                   </h1>

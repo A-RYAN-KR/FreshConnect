@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Star, Shield, Users, TrendingUp, CheckCircle, PhoneCall, Globe } from "lucide-react";
+import { Star, Shield, Users, TrendingUp, CheckCircle, PhoneCall, Globe, ChefHat } from "lucide-react";
 import heroImage from "@/assets/hero-marketplace.jpg";
 import vendorIcon from "@/assets/vendor-icon.jpg";
 import supplierIcon from "@/assets/supplier-icon.jpg";
@@ -37,7 +37,9 @@ const LandingPage = () => {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
+            <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 rounded-xl shadow-md">
+              <ChefHat className="h-6 w-6 text-white" />
+            </div>
             <h1 className="text-xl font-bold text-foreground">FreshConnect</h1>
           </div>
           <div className="flex items-center space-x-2 sm:space-x-4">
@@ -197,7 +199,9 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
+                <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 rounded-xl shadow-md">
+                  <ChefHat className="h-6 w-6 text-white" />
+                </div>
                 <h3 className="text-lg font-bold">FreshConnect</h3>
               </div>
               <p className="text-muted-foreground">{t('footer.about')}</p>

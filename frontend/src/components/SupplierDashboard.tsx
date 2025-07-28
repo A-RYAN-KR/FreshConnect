@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductInventoryTab } from "./supplier/ProductInventoryTab";
 import { SupplierOrdersTab } from "./supplier/SupplierOrdersTab";
-import { ArrowLeft, TrendingUp, Package, Star, BarChart3, AlertCircle, MessageSquare } from "lucide-react";
+import { ArrowLeft, TrendingUp, Package, Star, BarChart3, AlertCircle, MessageSquare, ChefHat } from "lucide-react";
 import { getSupplierDashboardStats, SupplierStats } from "@/services/supplierServices";
 import { Link } from "react-router-dom";
 
@@ -124,7 +124,9 @@ const SupplierDashboard = ({ onBack }: SupplierDashboardProps) => {
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg"></div>
+                <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 rounded-xl shadow-md">
+                  <ChefHat className="h-6 w-6 text-white" />
+                </div>
                 <h1 className="text-xl font-bold text-foreground">{t("supplier_dashboard.title")}</h1>
               </div>
             </div>
