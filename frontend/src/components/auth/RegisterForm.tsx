@@ -11,7 +11,6 @@ import { UtensilsCrossed, Truck, MapPin, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 
 export function RegisterForm() {
-  
   const [userType, setUserType] = useState<"vendor" | "supplier">("vendor");
 
   const [formData, setFormData] = useState({
@@ -64,7 +63,9 @@ export function RegisterForm() {
         },
         (error) => {
           console.error("Error getting coordinates:", error);
-          setErrorMessage("Failed to get coordinates. Please enable location services.");
+          setErrorMessage(
+            "Failed to get coordinates. Please enable location services."
+          );
         }
       );
     } else {
@@ -82,9 +83,12 @@ export function RegisterForm() {
     try {
       await register({ ...formData, userType });
       // On successful registration, navigate to the main part of the app
-      navigate('/auth/login');
+      navigate("/auth/login");
     } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || "Registration failed. Please check your details and try again.");
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Registration failed. Please check your details and try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -94,83 +98,140 @@ export function RegisterForm() {
     <Card className="w-full max-w-lg animate-fade-up shadow-lg border-none">
       <CardContent className="p-8">
         <form onSubmit={handleRegister} className="space-y-6">
-         {/* --- USER TYPE SELECTION --- */}
-<div className="space-y-2">
-  <Label className="font-semibold text-gray-800">I am a...</Label>
-  <RadioGroup
-    value={userType}
-    onValueChange={(v) => setUserType(v as "vendor" | "supplier")}
-    className="grid grid-cols-2 gap-4"
-  >
-    <div className="relative">
-      <RadioGroupItem
-        value="vendor"
-        id="vendor"
-        className="peer sr-only"
-      />
-      <Label
-        htmlFor="vendor"
-        className="peer-checked:border-orange-500 peer-checked:bg-orange-50/50 peer-checked:shadow-inner flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all"
-      >
-        <UtensilsCrossed className="h-8 w-8 mb-2 text-orange-600" />
-        <span className="font-medium text-gray-700">Food Vendor</span>
-      </Label>
-    </div>
-    <div className="relative">
-      <RadioGroupItem
-        value="supplier"
-        id="supplier"
-        className="peer sr-only"
-      />
-      <Label
-        htmlFor="supplier"
-        className="peer-checked:border-teal-500 peer-checked:bg-teal-50/50 peer-checked:shadow-inner flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all"
-      >
-        <Truck className="h-8 w-8 mb-2 text-teal-600" />
-        <span className="font-medium text-gray-700">Supplier</span>
-      </Label>
-    </div>
-  </RadioGroup>
-</div>
-
+          {/* --- USER TYPE SELECTION --- */}
+          <div className="space-y-2">
+            <Label className="font-semibold text-gray-800">I am a...</Label>
+            <RadioGroup
+              value={userType}
+              onValueChange={(v) => setUserType(v as "vendor" | "supplier")}
+              className="grid grid-cols-2 gap-4"
+            >
+              <div className="relative">
+                <RadioGroupItem
+                  value="vendor"
+                  id="vendor"
+                  className="peer sr-only"
+                />
+                <Label
+                  htmlFor="vendor"
+                  className={`flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all ${userType === "vendor"
+                      ? "border-orange-500 bg-orange-50/50 shadow-inner"
+                      : "border-gray-200"
+                    }`}
+                >
+                  <UtensilsCrossed className="h-8 w-8 mb-2 text-orange-600" />
+                  <span className="font-medium text-gray-700">Food Vendor</span>
+                </Label>
+              </div>
+              <div className="relative">
+                <RadioGroupItem
+                  value="supplier"
+                  id="supplier"
+                  className="peer sr-only"
+                />
+                <Label
+                  htmlFor="supplier"
+                  className={`flex flex-col items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all ${userType === "supplier"
+                      ? "border-teal-500 bg-teal-50/50 shadow-inner"
+                      : "border-gray-200"
+                    }`}
+                >
+                  <Truck className="h-8 w-8 mb-2 text-teal-600" />
+                  <span className="font-medium text-gray-700">Supplier</span>
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName">First name</Label>
-              <Input id="firstName" name="firstName" placeholder="John" value={formData.firstName} onChange={handleChange} required />
+              <Input
+                id="firstName"
+                name="firstName"
+                placeholder="John"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="lastName">Last name</Label>
-              <Input id="lastName" name="lastName" placeholder="Doe" value={formData.lastName} onChange={handleChange} required />
+              <Input
+                id="lastName"
+                name="lastName"
+                placeholder="Doe"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} required />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" type="password" placeholder="Minimum 8 characters" value={formData.password} onChange={handleChange} required />
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Minimum 8 characters"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <fieldset className="border-t pt-4">
-            <legend className="text-sm font-semibold text-gray-600 px-2 -ml-2">Business Address</legend>
+            <legend className="text-sm font-semibold text-gray-600 px-2 -ml-2">
+              Business Address
+            </legend>
             <div className="space-y-4 pt-2">
               <div className="space-y-2">
                 <Label htmlFor="address.city">City</Label>
-                <Input id="address.city" name="address.city" placeholder="e.g., Pune" value={formData.address.city} onChange={handleChange} />
+                <Input
+                  id="address.city"
+                  name="address.city"
+                  placeholder="e.g., Pune"
+                  value={formData.address.city}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="address.area">Area / Locality</Label>
-                <Input id="address.area" name="address.area" placeholder="e.g., Bibwewadi" value={formData.address.area} onChange={handleChange} />
+                <Input
+                  id="address.area"
+                  name="address.area"
+                  placeholder="e.g., Bibwewadi"
+                  value={formData.address.area}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="address.colony">Street / Colony / Landmark</Label>
-                <Input id="address.colony" name="address.colony" placeholder="e.g., Near City Pride" value={formData.address.colony} onChange={handleChange} />
+                <Label htmlFor="address.colony">
+                  Street / Colony / Landmark
+                </Label>
+                <Input
+                  id="address.colony"
+                  name="address.colony"
+                  placeholder="e.g., Near City Pride"
+                  value={formData.address.colony}
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </fieldset>
@@ -178,7 +239,12 @@ export function RegisterForm() {
           <div className="space-y-2">
             <Label>Get Pinpoint Location (Optional)</Label>
             <div className="flex items-center space-x-4">
-              <Button type="button" variant="outline" onClick={handleGetCoordinates} className="flex-shrink-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleGetCoordinates}
+                className="flex-shrink-0"
+              >
                 <MapPin className="mr-2 h-4 w-4" />
                 Use My Location
               </Button>
@@ -192,17 +258,32 @@ export function RegisterForm() {
             </div>
           </div>
 
-          {errorMessage && <p className="text-red-600 text-sm font-medium text-center">{errorMessage}</p>}
+          {errorMessage && (
+            <p className="text-red-600 text-sm font-medium text-center">
+              {errorMessage}
+            </p>
+          )}
 
-          <GradientButton type="submit" className="w-full h-12 text-base" disabled={isLoading}>
-            {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : 'Create Account'}
+          <GradientButton
+            type="submit"
+            className="w-full h-12 text-base"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            ) : (
+              "Create Account"
+            )}
           </GradientButton>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center p-6 bg-amber-50/50 border-t">
         <p className="text-sm text-gray-600">
           Already have an account?{" "}
-          <Link to="/auth/login" className="font-semibold text-orange-600 hover:underline">
+          <Link
+            to="/auth/login"
+            className="font-semibold text-orange-600 hover:underline"
+          >
             Sign in
           </Link>
         </p>
